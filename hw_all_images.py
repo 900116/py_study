@@ -4,6 +4,7 @@ from urllib import urlopen
 import re
 import os.path
 import time
+import socket
 
 def read(url):
 	webpage = urlopen(url)
@@ -44,7 +45,7 @@ def find_next_one(url):
 #抓取当前页面的所有图片，并递归下一篇
 def find_all_images(url,host,title,parentPath):
 	page_Path = os.path.join(parentPath,title)
-	if os.path.exists(page_Path)!=True:
+	if not os.path.exists(page_Path):
 		os.mkdir(page_Path)
 	page_url = host+url
 	content = read(page_url)
@@ -53,8 +54,13 @@ def find_all_images(url,host,title,parentPath):
 	for imgurl in imglist:
 		file_name = imgurl.split('/')[-1]
 		image_file_path = os.path.join(page_Path,file_name)
-		time.sleep(0.5)
-		urlretrieve(imgurl,image_file_path)
+		if not os.path.exists(image_file_path):
+			socket.setdefaulttimeout(10)
+			try:
+				urlretrieve(imgurl,image_file_path)
+			except Exception,e:
+				continue
+			time.sleep(0.5)
 		print imgurl + "下载完成"
 	tl = find_next_one(page_url)
 	print title+"----下载完成"
@@ -71,7 +77,7 @@ print "模块扫描完毕"
 for modelName,url in pic_models:
 	print "开始下载:"+modelName
 	modelPath = os.path.join(savePath,modelName)
-	if os.path.exists(modelPath)!=True:
+	if not os.path.exists(modelPath):
 		os.mkdir(modelPath)
 	model_frist_url,title = find_model_first_url(url)
 	find_all_images(model_frist_url,host,title,modelPath)
