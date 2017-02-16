@@ -61,24 +61,25 @@ def find_all_images(url,host,title,parentPath):
 			except Exception,e:
 				continue
 			time.sleep(0.5)
-		print imgurl + "下载完成"
+		print imgurl + "----下载完成"
 	tl = find_next_one(page_url)
 	print title+"----下载完成"
 	if len(tl) > 0:
 		nexturl,nexttitle = tl[0]
 		find_all_images(nexturl, host, nexttitle, parentPath)
 
-savePath = os.path.expanduser("~/Desktop/ht/")
-host = "http://www.yiren22.com"
-model_url = "/se/yazhousetu/564305.html"
-firstpage = host+model_url
-pic_models = find_all_pics_models(firstpage,host)
-print "模块扫描完毕"
-for modelName,url in pic_models:
-	print "开始下载:"+modelName
-	modelPath = os.path.join(savePath,modelName)
-	if not os.path.exists(modelPath):
-		os.mkdir(modelPath)
-	model_frist_url,title = find_model_first_url(url)
-	find_all_images(model_frist_url,host,title,modelPath)
-	print modelName + "----下载完成"
+if __name__ == "__main__":
+	savePath = os.path.expanduser("~/Desktop/ht/")
+	host = "http://www.yiren22.com"
+	model_url = "/se/yazhousetu/564305.html"
+	firstpage = host+model_url
+	pic_models = find_all_pics_models(firstpage,host)
+	print "模块扫描完毕"
+	for modelName,url in pic_models:
+		print "开始下载:"+modelName
+		modelPath = os.path.join(savePath,modelName)
+		if not os.path.exists(modelPath):
+			os.mkdir(modelPath)
+		model_frist_url,title = find_model_first_url(url)
+		find_all_images(model_frist_url,host,title,modelPath)
+		print modelName + "----下载完成"
