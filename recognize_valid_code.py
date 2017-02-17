@@ -256,7 +256,7 @@ def recongnize_image(imageName,except_width = -1,h_badsize = 0,v_badsize = 0,lan
 	img = Image.open(imageName)
 	#缩放
 	if except_width != -1:
-		img = resize_by_width(img, scale)
+		img = resize_by_width(img, except_width)
 	#转为灰色
 	img = gray_filter(img)
 	#二值化
