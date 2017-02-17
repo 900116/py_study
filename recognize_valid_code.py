@@ -288,4 +288,3 @@ if __name__ == "__main__":
 	test_2()
 	test_3()
 	test_4()
-	help(recongnize_image)
