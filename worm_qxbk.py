@@ -31,8 +31,10 @@ class QSBK:
 	 	pattern = re.compile('<div class="author clearfix">.*?<a.*?<a.*?<h2>(.*?)</h2>.*?<div.*?<a.*?<div class="content">.*?<span>(.*?)</span>.*?number">(.*?)</i>.*?number">(.*?)</i>',re.S)
 	 	items = re.findall(pattern, content)
 	 	pageStories = []
-	 	for item in items:
-			pageStories.append(item)	 		
+	 	for author,content,haoxiao,pinglun in items:
+	 		content = content.replace('<br>','\n')
+	 		content = content.replace('<br/>','\n')
+			pageStories.append((author,content,haoxiao,pinglun))	 		
 		return pageStories
 
 	def loadPage(self):
