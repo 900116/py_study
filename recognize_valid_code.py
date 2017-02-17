@@ -1,6 +1,7 @@
 #encoding:utf-8
 import pytesseract
 from PIL import Image
+from PIL import ImageGrab
 import os
 
 #缩放
@@ -241,19 +242,16 @@ def divid_image(img,badsize):
 				last_black_is_zero = True
 	return imglist
 
-#'chi_sim'
-def recongnize_image(imageName,except_width = -1,h_badsize = 0,v_badsize = 0,language="eng"):
+def recongnise_image_with_img(img,except_width = -1,h_badsize = 0,v_badsize = 0,language="eng",result_exec=None):
 	"""
 	图片识别方法
-	:param imageName:图片名称
+	:param image:图片
 	:param except_width:期望宽度，默认为-1，表示不进行缩放
 	:param h_badsize:水平噪点大小
 	:param v_badsize:竖直噪点大小
 	:param language:语言设定，默认为英文，如果为简体中文设置'chi_sim' 
 	:returns:是别的文本
 	"""
-	#加载图片
-	img = Image.open(imageName)
 	#缩放
 	if except_width != -1:
 		img = resize_by_width(img, except_width)
@@ -268,20 +266,31 @@ def recongnize_image(imageName,except_width = -1,h_badsize = 0,v_badsize = 0,lan
 	if v_badsize != 0:
 		remove_noise_points_horizental(img, h_badsize)
 	result = pytesseract.image_to_string(img,language)
-	result = result.replace(' ','')
+	if result_exec != None:
+		result = result_exec(result)
 	return result
 
+
+#'chi_sim'
+def recongnize_image_file(imageName,except_width = -1,h_badsize = 0,v_badsize = 0,language="eng",result_exec=None):
+	return recongnise_image_with_img(Image.open(imageName),except_width,h_badsize,v_badsize,language,result_exec)
+
+
 def test_1():
-	print recongnize_image("test.jpg",h_badsize=4,v_badsize=3)
+	print recongnize_image_file("test.jpg",h_badsize=4,v_badsize=3,result_exec=lambda x:x.replace(' ',''))
 
 def test_2():
-	print recongnize_image("test2.jpg",language="chi_sim")
+	print recongnize_image_file("test2.jpg",language="chi_sim")
 
 def test_3():
-	print recongnize_image("test3.jpg",language="chi_sim") 
+	print recongnize_image_file("test3.jpg",language="chi_sim") 
 
 def test_4():
-	print recongnize_image("test4.jpg",language="chi_sim") 
+	print recongnize_image_file("test4.jpg",language="chi_sim") 
+
+def test_5():
+	im = ImageGrab.grab()
+	print recongnise_image_with_img(im,h_badsize=2,v_badsize=2,language="chi_sim")
 
 if __name__ == "__main__":
 	test_1()
