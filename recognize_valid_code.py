@@ -171,14 +171,15 @@ def remove_noise_points_verital(img,badsize):
 		last_is_black = True #上一个是否黑点
 		for y in xrange(h):
 			p = x,y
-		 	p_value = img.getpixel(p)
-		 	if p_value != 255: #当前为黑点
-		 		black_numbers.append((x,y)) 
-		 	else:#白点，黑点数量小于噪点数量
-		 		if len(black_numbers) < badsize:
-		 			for p in black_numbers:
-		 				img.putpixel(p,255) 
-		 		black_numbers = []	
+			p_value = img.getpixel(p)
+			#当前为黑点 or 白点，黑点数量小于噪点数量
+			if p_value != 255: 
+				black_numbers.append((x,y)) 
+			else:
+				if len(black_numbers) < badsize:
+					for p in black_numbers:
+						img.putpixel(p,255) 
+				black_numbers = []	
 
 #删除水平噪点
 def remove_noise_points_horizental(img,badsize):
@@ -194,14 +195,15 @@ def remove_noise_points_horizental(img,badsize):
 		last_is_black = True
 		for x in xrange(w):
 			p = x,y
-		 	p_value = img.getpixel(p)
-		 	if p_value != 255: #黑点
-		 		black_numbers.append((x,y)) 
-		 	else:#白点，黑点数量小于噪点数量
-		 		if len(black_numbers) < badsize:
-		 			for p in black_numbers:
-		 				img.putpixel(p,255) 
-		 		black_numbers = []	
+			p_value = img.getpixel(p)
+			#黑点or白点，黑点数量小于噪点数量
+			if p_value != 255:
+				black_numbers.append((x,y)) 
+			else:
+				if len(black_numbers) < badsize:
+					for p in black_numbers:
+						img.putpixel(p,255) 
+				black_numbers = []	
 
 #拆分图片
 def divid_image(img,badsize):
@@ -219,8 +221,9 @@ def divid_image(img,badsize):
 		black_number = 0
 		for y in xrange(h):
 			p = x,y
-		 	p_value = img.getpixel(p)
-		 	if p_value != 255: #黑色点
+			p_value = img.getpixel(p)
+			#黑色点
+			if p_value != 255:
 				black_number += 1
 		#上一个是0
 		if last_black_is_zero:
@@ -228,14 +231,12 @@ def divid_image(img,badsize):
 			if black_number > badsize:
 				min_x = x
 				last_black_is_zero = False
-		#上一个不是0
+		#上一个不是0 and 当前是0
 		else:
-			#当前是0
 			if black_number <= badsize:
 				max_x = x-1
-				print min_x,max_x
 				subimg = create_sub_image(img,(min_x,max_x))
-				subimg = remove_verital_bad(img, 0)
+				subimg = remove_noise_points_verital(img,0)
 				subimg.save("test_%d.jpg" % i)
 				imglist.append(subimg)
 				i+=1
@@ -294,6 +295,7 @@ def test_5():
 
 if __name__ == "__main__":
 	test_1()
-	test_2()
-	test_3()
-	test_4()
+	# test_2()
+	# test_3()
+	# test_4()
+	# test_5()
