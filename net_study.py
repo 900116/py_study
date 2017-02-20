@@ -19,13 +19,16 @@ def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,he
 	try:
 		response = urllib2.urlopen(request,timeout=timeout)
 	except urllib2.HTTPError, e:
-		print "发生错误[HTTPError %d]" % e.code+":"+str(e.reason)
+		if hasattr(e,"reason"):
+			print "页面访问失败[HTTPError %d]" % e.code+"，原因:"+str(e.reason)
 		return None
 	except urllib2.URLError,e:
-		print "发生错误"+str(e.reason)
+		if hasattr(e,"reason"):
+			print "页面访问失败，原因："+str(e.reason)
 		return None
 	except Exception,e:
-		print "发生错误"+str(e.reason)
+		if hasattr(e,"reason"):
+			print "页面访问失败，原因："+str(e.reason)
 		return None
 	content = response.read()
 	if log:
