@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import re
 import net_study
+from worm_base import WormBase
 
 #处理页面标签类
 class Tool:
@@ -35,13 +36,13 @@ class Tool:
 
 
 #百度贴吧爬虫类
-class BDTB(object):
+class BDTB(WormBase):
 	def __init__(self, baseUrl,onlyLZ=0):
+		WormBase.__init__(self)
 		self.baseUrl = "http://tieba.baidu.com/p/" + baseUrl
 		self.onlyLZ = '?see_lz='+str(onlyLZ)
 		self.title = None
 		self.totalPage = 0
-		self.currPage = 1
 		self.tool = Tool()
 		self.pages = []
 		self.lastOnlyLZ = onlyLZ
@@ -77,71 +78,34 @@ class BDTB(object):
 			for author,content,time in result:
 				content = self.tool.replace(content)
 				result_new.append((author,content,time))
-			if self.currPage > len(self.pages):
+			if self.pageIndex > len(self.pages)-1:
 				self.pages.append(result_new)	
 			else:
-				self.pages[self.currPage-1] = result_new
+				self.pages[self.pageIndex] = result_new
 
-	def display(self):
-		page_content = self.pages[self.currPage-1]
+	def curr_page_content(self):
+		self.getPage()
+		tz_list = self.pages[self.pageIndex]
+		show_items = []
 		i = 0
-		for author,content,time in page_content:
-			if i == 0 and self.currPage == 1:
+		for author,content,time in tz_list:
+			s = ""
+			if i == 0 and self.pageIndex == 0:
 				self.lz = author
 			if author == self.lz:
-				print "【楼主】"
-			print "作者: " + author
-			print "内容: \n" + content
-			print "时间: " + time
-			print '-'*100+'\n'
+				s+= "【楼主】"
+			s+=  "作者: " + author
+			s+=  "内容: \n" + content
+			s+=  "时间: " + time
 			i+=1
-		print "^"*30+"【" + self.title + "】"+"^"*30
-		print "第%d页/共%d页" % (self.currPage,self.totalPage)
-
-	def nextPage(self):
-		if self.currPage == self.totalPage:
-			print "没有更多了"
-		else:
-			self.currPage+=1
-			self.getPage()
-
-	def lastPage(self):
-		if self.currPage == 1:
-			print "已经是第一页"
-		else:
-			self.currPage-=1
-			self.getPage()
+			show_items.append(s)
+		return show_items
 
 	def getPage(self):
-		if self.pages > len(self.pages) or self.lastOnlyLZ != self.onlyLZ:
-			params = {'pn':str(self.currPage),'see_lz':self.onlyLZ}
+		if self.pageIndex > len(self.pages)-1 or self.lastOnlyLZ != self.onlyLZ:
+			params = {'pn':str(self.pageIndex+1),'see_lz':self.onlyLZ}
 			self.content = net_study.get(self.baseUrl,params=params)
 			self.find_title()	
 			self.find_totalpage()
 			self.find_content()
 			self.lastOnlyLZ == self.onlyLZ
-		self.display()
-
-
-if __name__ == "__main__":
-		key = raw_input("欢迎使用百度贴吧阅读器，请输入要浏览的帖子编号,输入0退出:")
-		BreakFlag = False
-		if key == "0":
-			BreakFlag = True
-		bdtb = BDTB(key)
-		bdtb.getPage()
-		while not BreakFlag:
-			key = raw_input("按回车键获取下一页内容，按q键获取上一页内容\n按z键切换到只看楼主,按c键回到正常模式，按其他键退出:")
-			if key == '':
-				bdtb.nextPage()
-			elif key == 'q':
-				bdtb.lastPage()
-			elif key == 'z':
-				bdtb.onlyLZ = 1
-				bdtb.getPage()
-			elif key == 'c':
-				bdtb.onlyLZ = 0
-				bdtb.getPage()
-			else:
-				break
-		print "程序已经退出"

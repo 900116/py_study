@@ -2,7 +2,7 @@
 import urllib
 import urllib2
 
-def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,headers = {},enable_proxy=False):
+def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,headers = {},proxy_url=None):
 	data = None
 	if params != None:
 		data = urllib.urlencode(params)
@@ -11,11 +11,10 @@ def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,he
 		url = url + "?" + data
 		request = urllib2.Request(url,headers=headers)
 	elif method is 'post':
-		print method
 		request = urllib2.Request(url,data,headers=headers)
 	else:
 		return None
-	user_proxy(enable_proxy)
+	user_proxy(proxy_url)
 	try:
 		response = urllib2.urlopen(request,timeout=timeout)
 	except urllib2.HTTPError, e:
@@ -38,17 +37,17 @@ def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,he
 	return content
 
 
-def post(url,params=None,timeout = 5,log = False,headers = {},enable_proxy=False):
-	return web_custom_request(url,params,'post',timeout,log,headers,enable_proxy)
+def post(url,params=None,timeout = 5,log = False,headers = {},proxy_url=None):
+	return web_custom_request(url,params,'post',timeout,log,headers,proxy_url)
 
-def get(url,params=None,timeout = 5,log = False,headers = {},enable_proxy=False):
-	return web_custom_request(url,params,'get',timeout,log,headers,enable_proxy)
+def get(url,params=None,timeout = 5,log = False,headers = {},proxy_url=None):
+	return web_custom_request(url,params,'get',timeout,log,headers,proxy_url)
 
-def web_api(url,params=None,method = 'get',timeout = 5,log = False,headers = {},enable_proxy=False):
+def web_api(url,params=None,method = 'get',timeout = 5,log = False,headers = {},proxy_url=None):
 	if method is 'get':
-		return get(url, params,timeout,log,headers,enable_proxy)
+		return get(url, params,timeout,log,headers,proxy_url)
 	elif method is 'post':
-		return post(url, params,timeout,log,headers,enable_proxy)
+		return post(url, params,timeout,log,headers,proxy_url)
 	else:
 		raise NotImplementedError("the method not implement")
 
@@ -68,10 +67,10 @@ def about_header():
 #urllib2 默认会使用环境变量 http_proxy 来设置 HTTP Proxy
 #假如一个网站它会检测某一段时间某个IP 的访问次数，如果访问次数过多，它会禁止你的访问
 #所以你可以设置一些代理服务器来帮助你做工作，每隔一段时间换一个代理
-def user_proxy(enable_proxy):
-	proxy_handler = urllib2.ProxyHandler({"http":'http://some-proxy.com:8080'})
+def user_proxy(proxy_url):
+	proxy_handler = urllib2.ProxyHandler({'http':proxy_url})
 	null_proxy_handler = urllib2.ProxyHandler({})
-	if enable_proxy:
+	if proxy_url != None:
 		opener = urllib2.build_opener(proxy_handler)
 	else:
 		opener = urllib2.build_opener(null_proxy_handler)
