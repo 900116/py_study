@@ -9,6 +9,7 @@ from worm_base import WormBase
 class QSBK(WormBase):
 	def __init__(self):
 	 	self.pageIndex = 0
+	 	self.totalPage = 0
 	 	self.url_base = 'http://www.qiushibaike.com/hot/page/'
 	 	user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 	 	self.headers = { 'User-Agent' : user_agent }
@@ -53,3 +54,8 @@ class QSBK(WormBase):
 			s+=  "\n"
 			show_items.append(s)
 		return show_items
+
+if __name__ == '__main__':
+	qb = QSBK()
+	qb.title = "糗事百科"
+	qb.start()

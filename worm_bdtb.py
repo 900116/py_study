@@ -89,14 +89,15 @@ class BDTB(WormBase):
 		show_items = []
 		i = 0
 		for author,content,time in tz_list:
-			s = ""
+			s = "\n" * 2
 			if i == 0 and self.pageIndex == 0:
 				self.lz = author
 			if author == self.lz:
 				s+= "【楼主】"
-			s+=  "作者: " + author
-			s+=  "内容: \n" + content
-			s+=  "时间: " + time
+			s+=  "\n作者: " + author
+			s+=  "\n内容: \n" + content
+			s+=  "\n时间: " + time
+			s+=  "\n"
 			i+=1
 			show_items.append(s)
 		return show_items
@@ -109,3 +110,8 @@ class BDTB(WormBase):
 			self.find_totalpage()
 			self.find_content()
 			self.lastOnlyLZ == self.onlyLZ
+
+if __name__ == '__main__':
+	worm = BDTB("657940638")
+	worm.title = "百度贴吧"
+	worm.start()

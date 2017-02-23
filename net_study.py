@@ -1,6 +1,12 @@
 #encoding=utf-8
 import urllib
 import urllib2
+import re
+
+def web_easy_content_filter(url,pattern):
+	content = get(url,headers=about_header())
+	return re.findall(pattern, content,re.S)
+
 
 def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,headers = {},proxy_url=None):
 	data = None
@@ -34,6 +40,7 @@ def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,he
 		print url
 		print params
 		print content
+	response.close()
 	return content
 
 

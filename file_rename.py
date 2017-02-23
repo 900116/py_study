@@ -21,7 +21,7 @@ def list_all_file(rootDir,format_suffix,trans_func):
 	for f in os.listdir(rootDir):
 		all_path = os.path.join(rootDir,f)
 		if os.path.isfile(all_path):
-			if all_path.endswith("."+format_suffix):
+			if os.path.splitext(all_path)[1] != ("."+format_suffix):
 				rename(all_path,trans_func)
 		else:
 			list_all_file(all_path,format_suffix,trans_func)
