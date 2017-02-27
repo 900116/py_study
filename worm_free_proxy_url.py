@@ -6,3 +6,5 @@ pattern = "<tr class=\".*?>.*?<img.*?<td>(.*?)</td>.*?<td>(.*?)</td>.*?<a.*?>(.*
 result = net_study.web_easy_content_filter(url, pattern)
 for ip,port,addr,isAppear,type_v,live_days,time in result:
 	print ip,port,addr,isAppear,type_v,live_days,time
+
+
