@@ -8,21 +8,10 @@ def web_easy_content_filter(url,pattern):
 	return re.findall(pattern, content,re.S)
 
 
-def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,headers = {},proxy_url=None):
-	data = None
-	if params != None:
-		data = urllib.urlencode(params)
-	if method is 'get':
-		data = data!=None and data or ''
-		url = url + "?" + data
-		request = urllib2.Request(url,headers=headers)
-	elif method is 'post':
-		request = urllib2.Request(url,data,headers=headers)
-	else:
-		return None
+def web_custom_request(req,timeout = 5,log = False,proxy_url=None):
 	user_proxy(proxy_url)
 	try:
-		response = urllib2.urlopen(request,timeout=timeout)
+		response = urllib2.urlopen(req,timeout=timeout)
 	except urllib2.HTTPError, e:
 		if hasattr(e,"reason"):
 			print "页面访问失败[HTTPError %d]" % e.code+"，原因:"+str(e.reason)
@@ -45,10 +34,21 @@ def web_custom_request(url,params=None,method = 'get',timeout = 5,log = False,he
 
 
 def post(url,params=None,timeout = 5,log = False,headers = {},proxy_url=None):
-	return web_custom_request(url,params,'post',timeout,log,headers,proxy_url)
+	data = None
+	if params != None:
+		data = urllib.urlencode(params)
+	request = urllib2.Request(url,data,headers=headers)
+	return web_custom_request(request,timeout,log,proxy_url)
 
 def get(url,params=None,timeout = 5,log = False,headers = {},proxy_url=None):
-	return web_custom_request(url,params,'get',timeout,log,headers,proxy_url)
+	if params != None:
+		data = urllib.urlencode(params)
+	else:
+		data = ''
+	url = url + "?" + data
+	request = urllib2.Request(url,headers=headers)
+	return web_custom_request(request,timeout,log,proxy_url)
+
 
 def web_api(url,params=None,method = 'get',timeout = 5,log = False,headers = {},proxy_url=None):
 	if method is 'get':
