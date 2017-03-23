@@ -24,3 +24,4 @@
 - 安装语言库  
 	终端：**open /usr/local/share/tessdata/**  
 	将下载好的语言库(xxx.trainedata,其中xxx为language参数的名字)放入该文件夹
+# GHFunctionCode
