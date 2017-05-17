@@ -1,14 +1,22 @@
 ##基础部分  
+
 ###整数的进制  
+
 十进制：```let d = 17```<br>  
 二进制：```let b = 0b00100```<br>  
 八进制：```let o = 0o21```<br>  
 十六进制: ```let h = 0x1a43```  
+
 ###typealias  
+
 ```typealias UID = UInt16```  
+
 ###布尔  
+
 ```let x = true```  
+
 ###if  
+
 以下代码不会编译通过<br>  
 
 ```  
@@ -52,6 +60,7 @@ let implicitString: String = assumedString  // 不需要感叹号
 ```
 
 ###元组
+
 ```
 let httpError = (404,"Not Found")
 ```
@@ -65,6 +74,7 @@ let description = httpError2.description
 ```
 
 ###异常处理
+
 函数抛出异常
 
 ```
