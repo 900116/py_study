@@ -1,21 +1,21 @@
-##基础部分  
+## 基础部分  
 
-###整数的进制  
+### 整数的进制  
 
 十进制：```let d = 17```<br>  
 二进制：```let b = 0b00100```<br>  
 八进制：```let o = 0o21```<br>  
 十六进制: ```let h = 0x1a43```  
 
-###typealias  
+### typealias  
 
 ```typealias UID = UInt16```  
 
-###布尔  
+### 布尔  
 
 ```let x = true```  
 
-###if  
+### if  
 
 以下代码不会编译通过<br>  
 
@@ -60,7 +60,7 @@ let implicitString: String = assumedString  // 不需要感叹号
 !可以放在变量后面进行解包赋值，?必须放在调用前面
 ```
 
-###元组
+### 元组
 
 ```
 let httpError = (404,"Not Found")
@@ -74,7 +74,7 @@ let statusCode = httpError2.statusCode
 let description = httpError2.description
 ```
 
-###异常处理
+### 异常处理
 
 函数抛出异常
 
@@ -108,7 +108,7 @@ do {
 }
 ```
 
-###断言
+### 断言
 ```
 assert(age >= 0)
 assert(age >= 0,"A person's age cannot be less than zero")
@@ -120,7 +120,7 @@ assert(age >= 0,"A person's age cannot be less than zero")
 选项来 build 时，断言会被禁用。
 ```
 
-##运算符
+## 运算符
 ### >= 和 <=
 swift可以使用>=或者<=进行判断
 
@@ -129,7 +129,7 @@ swift可以使用>=或者<=进行判断
 2 <= 1   // false, 因为 2 并不小于等于 1
 ```
 
-###元组的比较
+### 元组的比较
 元组大小会按照从左到右、逐值比较的方式，直到发现有两个值不等时停止。如果所有的值都相等，那么这一对元组我们就称它们是相等的。例如：
 
 ```
@@ -138,7 +138,7 @@ swift可以使用>=或者<=进行判断
 (4, "dog") == (4, "dog")      // true，因为 4 等于 4，dog 等于 dog
 ```
 
-###空合运算符
+### 空合运算符
 `a ?? b`<br>
 可以表示<br>
 `a != nil ? a! : b`<br>
@@ -152,7 +152,7 @@ var colorNameToUse = userDefinedColorName ?? defaultColorName
 // userDefinedColorName 的值为空，所以 colorNameToUse 的值为 "red"
 ```
 
-###区间运算符
+### 区间运算符
 `a...b`表示定义一个闭区间(包括a和b的值):
 
 ```
@@ -167,15 +167,15 @@ for i in 1..<5 :
 	print(i)  //打印1，2，3，4
 ```
 
-##字符与字符串
-###字符串常量
+## 字符与字符串
+### 字符串常量
 字符串常量，必须有加@
 
 ```
 let someStr = "abcdef"
 ```
 
-###字符串支持+和+=操作
+### 字符串支持+和+=操作
 ```
 var myStr = "a"
 myStr += "b"
@@ -189,10 +189,10 @@ let c_str = a_str+b_str
 您不能将一个字符串或者字符添加到一个已经存在的字符变量上，因为字符变量只能包含一个字符。
 ```
 
-###字符串是值类型
+### 字符串是值类型
 任何情况下，都会对已有字符串值创建新副本，并对该新副本进行传递或赋值操作。
 
-###使用字符
+### 使用字符
 ```
 let c_a:Character = "a"
 
@@ -206,7 +206,7 @@ for character in "Dog!🐶".characters {
 // 🐶
 ```
 
-###字符串插值
+### 字符串插值
 ```
 let multiplier = 3
 let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
@@ -218,13 +218,13 @@ let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
 符串可以包含其他字面量。
 ```
 
-###Unicode标量
+### Unicode标量
 ```
 let dollarSign = "\u{24}"    // $, Unicode 标量 U+0024
 let blackHeart = "\u{2665}"  // ♥, Unicode 标量 U+2665
 let sparklingHeart = "\u{1F496}"// 💖, Unicode 标量U+1F496
 ```
-###计算字符数量
+### 计算字符数量
 ```
 let unusualMenagerie = "Koala 🐨, Snail 🐌, Penguin 🐧, Dromedary 🐪"
 print("unusualMenagerie has \(unusualMenagerie.characters.count) characters")
@@ -244,7 +244,7 @@ print("unusualMenagerie has \(unusualMenagerie.characters.count) characters")
 展的字符群集。
 ```
 
-###字符串比较
+### 字符串比较
 字符串/字符可以用等于操作符(==)和不等于操作符(!=)
 
 ```
@@ -259,7 +259,7 @@ if quotation == sameQuotation {
 在 Swift 中，字符串和字符并不区分地域。
 ```
 
-###UTF-8表示
+### UTF-8表示
 您可以通过遍历String的utf8属性来访问它的UTF-8表示。 其为String.UTF8View类型的属性，UTF8View是无符号8位 (UInt8) 值的集合
 
 ```
@@ -270,10 +270,10 @@ print("")
 // 68 111 103 226 128 188 240 159 144 182
 ```
 
-###UTF-16表示
+### UTF-16表示
 同上
 
-###Unicode 标量表示
+### Unicode 标量表示
 您可以通过遍历String值的unicodeScalars属性来访问它的 Unicode 标量表示。 其为UnicodeScalarView类型的属性，UnicodeScalarView是UnicodeScalar类型的值的集合。
 
 ```
@@ -284,20 +284,20 @@ print("")
 // 68 111 103 8252 128054
 ```
 
-##集合框架
-###三种集合类型
+## 集合框架
+### 三种集合类型
 Swift 语言提供`Arrays`、`Sets`和`Dictionaries`三种基本的集合类型用来存储集合数据。
 
-###集合可变性
+### 集合可变性
 通过let和var区分是否可变
 
-###创建一个空数组
+### 创建一个空数组
 `var someInts = [Int]()`
 
-###创建一个带有默认值的数组
+### 创建一个带有默认值的数组
 `var threeDoubles = Array(repeating: 0.0, count: 3)`
 
-###数组支持+和+=运算符
+### 数组支持+和+=运算符
 数组之间可以用+和+=方法
 
 ```
@@ -305,31 +305,31 @@ var arr_x = [1,2,3]
 arr_x += [4,5]
 ```
 
-###判断数组为空
+### 判断数组为空
 isEmpty可以判断数组是否为空，其等价于count==0
 
-###可以用区间批量改变数组的值
+### 可以用区间批量改变数组的值
 ```
 var arr_x = [1,2,3]
 arr_x[1...2] = [10,10] //arr_x此时为[1,10,10]
 ```
 
-###用enumerated遍历数组
+### 用enumerated遍历数组
 ```
 for (index, value) in shoppingList. enumerated() {
     print("Item \(String(index + 1)): \(value)")
 }
 ```
 
-###创建和构造一个空的集合
+### 创建和构造一个空的集合
 `var letters = Set<Character>()`
 
-###可以用数组字面量创建一个集合
+### 可以用数组字面量创建一个集合
 ```
 var favoriteGenres: Set<String> = ["Rock", "Classical", "Hip hop"]
 ```
 
-###集合操作
+### 集合操作
 - 使用intersection(_:)方法根据两个集合中都包含的值创建的一个新的集合。
 - 使用symmetricDifference(_:)方法根据在一个集合中但不在两个集合中的值创建一个新的集合。
 - 使用union(_:)方法根据两个集合的值创建一个新的集合。
@@ -340,23 +340,23 @@ var favoriteGenres: Set<String> = ["Rock", "Classical", "Hip hop"]
 - 使用isStrictSubset(of:)或者isStrictSuperset(of:)方法来判断一个集合是否是另外一个集合的子集合或者父集合并且两个集合并不相等。
 - 使用isDisjoint(with:)方法来判断两个集合是否不含有相同的值(是否没有交集)。
 
-###创建一个空字典
+### 创建一个空字典
 `var namesOfIntegers = [Int: String]()`
 
-###字典字面量
+### 字典字面量
 ```
 var airports: [String: String] = 
 ["YYZ": "Toronto Pearson", "DUB": "Dublin"]
 ```
-###字典遍历
+### 字典遍历
 ```
 for (airportCode, airportName) in airports {
     print("\(airportCode): \(airportName)")
 }
 ```
 
-##控制流
-###使用匿名变量遍历
+## 控制流
+### 使用匿名变量遍历
 当你不需要知道下表的时候，你可以使用如下代码
 
 ```
@@ -380,10 +380,10 @@ for i in stride(from: 0, through: 10, by: 2) {
     //会打印0，2，4，6，8，10
 }
 ```
-###Repeat-While循环
+### Repeat-While循环
 Swift语言的repeat-while循环和其他语言中的do-while循环是类似的。
 
-###支持区间的Switch
+### 支持区间的Switch
 ```
 let approximateCount = 62
 var naturalCount: String
@@ -402,7 +402,7 @@ default:
     naturalCount = "many"
 }
 ```
-###Switch中的元组
+### Switch中的元组
 我们可以使用元组在同一个switch语句中测试多个值。元组中的元素可以是值，也可以是区间。另外，使用下划线（_）来匹配所有可能的值。
 
 ```
@@ -421,7 +421,7 @@ default:
 }
 ```
 
-###Switch值绑定
+### Switch值绑定
 ```
 let anotherPoint = (2, 0)
 switch anotherPoint {
@@ -434,7 +434,7 @@ case let (x, y):
 }
 // 输出 "on the x-axis with an x value of 2"
 ```
-###Switch中可以加入Where
+### Switch中可以加入Where
 ```
 let yetAnotherPoint = (1, -1)
 switch yetAnotherPoint {
@@ -447,7 +447,7 @@ case let (x, y):
 }
 ```
 
-###Switch组合匹配
+### Switch组合匹配
 ```
 let someCharacter: Character = "e"
 switch someCharacter {
@@ -460,7 +460,7 @@ default:
 }
 ```
 
-###Switch,For,Continue
+### Switch,For,Continue
 ```
 let puzzleInput = "great minds think alike"
 var puzzleOutput = ""
@@ -475,7 +475,7 @@ for character in puzzleInput.characters {
 print(puzzleOutput)
 ```
 
-###Switch贯穿
+### Switch贯穿
 C语言中，你必须显示的调用break，才能跳过其他的分支，而Swift刚好与之相反，只要匹配到了一个分支，switch就结束了，你可以通过在分支下面加入fallthrough来实现C语言的switch
 
 ```
@@ -496,7 +496,7 @@ print(description)
 地使代码继续连接到下一个 case 中的代码，这和 C 语言标准中的switch语句特性是一样的。
 ```
 
-###Continue,Break的标签
+### Continue,Break的标签
 当你有多层嵌套循环的时候，你可以用continue/break label来实现跳过指定的循环层
 
 ```
@@ -518,7 +518,7 @@ gameLoop: while square != finalSquare {
 }
 print("Game over!")
 ```
-###guard
+### guard
 像if语句一样，guard的执行取决于一个表达式的布尔值。我们可以使用guard语句来要求条件必须为真时，以执行guard语句后的代码。不同于if语句，一个guard语句总是有一个else从句，如果条件不为真则执行else从句中的代码。(用于对允许值的过滤，往往不允许的值的条件，会让
 代码可读性变差，也有可能写漏)
 
@@ -542,15 +542,15 @@ greet(["name": "Jane", "location": "Cupertino"])
 // 输出 "I hope the weather is nice in Cupertino."
 ```
 
-###检测API是否可用
+### 检测API是否可用
 ```
 if #available(iOS 10, macOS 10.1,*) {
     
 }
 ```
 
-##函数
-###函数定义
+## 函数
+### 函数定义
 ```
 func greet(person: String, alreadyGreeted: Bool)
  -> String {
@@ -559,7 +559,7 @@ func greet(person: String, alreadyGreeted: Bool)
 greet(person: "Tim", alreadyGreeted: true)
 ```
 
-###无返回值函数
+### 无返回值函数
 ```
 func greet(person: String) {
     print("Hello, \(person)!")
@@ -567,7 +567,7 @@ func greet(person: String) {
 greet(person: "Dave")
 ```
 
-###多重返回值函数
+### 多重返回值函数
 ```
 func minMax(array: [Int]) -> (min: Int, max: Int) {
     var currentMin = array[0]
@@ -586,13 +586,13 @@ let bounds = minMax(array: [8, -6, 2, 109, 3, 71])
 print("min is \(bounds.min) and max is \(bounds.max)")
 ```
 
-###可选元组返回类型
+### 可选元组返回类型
 ```
 注意 可选元组类型如 (Int, Int)? 与元组包含可选类型如 (Int?, Int?) 是不同的.可选的元组类
 型，整个元组是可选的，而不只是元组中的每个元素值。
 ```
 
-###指定参数标签
+### 指定参数标签
 ```
 func greet(person: String, from hometown: String)
  -> String {
@@ -601,7 +601,7 @@ func greet(person: String, from hometown: String)
 greet(person: "Bill", from: "Cupertino")
 ```
 
-###忽略参数标签
+### 忽略参数标签
 如果你不希望为某个参数添加一个标签，可以使用一个下划线(_)来代替一个明确的参数标签
 
 ```
@@ -611,7 +611,7 @@ func someFunction(_ firstParameterName: Int, secondParameterName: Int) {
 someFunction(1, secondParameterName: 2)
 ```
 
-###模式参数值
+### 模式参数值
 将不带有默认值的参数放在函数参数列表的最前。一般来说，没有默认值的参数更加的重要，将不带默认值的参数放在最前保证在函数调用时，非默认参数的顺序是一致的，同时也使得相同的函数在不同情况下调用时显得更为清晰。
 
 ```
@@ -620,7 +620,7 @@ func someFunction(parameterWithoutDefault: Int, parameterWithDefault: Int = 12) 
 }
 ```
 
-###可变参数
+### 可变参数
 ```
 func arithmeticMean(_ numbers: Double...) -> Double {
     var total: Double = 0
@@ -635,7 +635,7 @@ arithmeticMean(1, 2, 3, 4, 5)
 一个函数最多只能拥有一个可变参数。
 ```
 
-###输入输出参数
+### 输入输出参数
 ```
 func swapTwoInts(_ a: inout Int, _ b: inout Int) {
     let temporaryA = a
@@ -650,7 +650,7 @@ print("someInt is now \(someInt), and anotherInt is now \(anotherInt)")
 // 打印 "someInt is now 107, and anotherInt is now 3"
 ```
 
-###使用函数类型
+### 使用函数类型
 ```
 var mathFunction: (Int, Int) -> Int = addTwoInts
 
@@ -663,7 +663,7 @@ func chooseStepFunction(backward: Bool) -> (Int) -> Int {
 }
 ```
 
-###嵌套函数
+### 嵌套函数
 ```
 func chooseStepFunction(backward: Bool) -> (Int) -> Int {
     func stepForward(input: Int) -> Int {
@@ -676,14 +676,14 @@ func chooseStepFunction(backward: Bool) -> (Int) -> Int {
 }
 ```
 
-##闭包
-###闭包表达式语法
+## 闭包
+### 闭包表达式语法
 ```
 reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
     return s1 > s2
 })
 ```
-###根据上下文推断类型
+### 根据上下文推断类型
 因为排序闭包函数是作为 sorted(by:) 方法的参数传入的，Swift 可以推断其参数和返回值的类型。sorted(by:) 方法被一个字符串数组调用，因此其参数必须是 (String, String) -> Bool 类型的函数。这意味着 (String, String) 和 Bool 类型并不需要作为闭包表达式定义的一部分。因为所有的类型都可以被正确推断，返回箭头（->）和围绕在参数周围的括号也可以被省略：
 
 ```
@@ -691,28 +691,28 @@ reversedNames = names.sorted(by:
 { s1, s2 in return s1 > s2 } )
 ```
 
-###单表达式闭包隐式返回
+### 单表达式闭包隐式返回
 单行表达式闭包可以通过省略 return 关键字来隐式返回单行表达式的结果。
 
 ```
 reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
 ```
 
-###参数名称缩写
-Swift 自动为内联闭包提供了参数名称缩写功能，你可以直接通过 $0，$1，$2 来顺序调用闭包的参数，以此类推。
+### 参数名称缩写
+swift 自动为内联闭包提供了参数名称缩写功能，你可以直接通过 $0，$1，$2 来顺序调用闭包的参数，以此类推。
 
 ```
 reversedNames = names.sorted(by: { $0 > $1 } )
 ```
 
-###运算符方法
+### 运算符方法
 实际上还有一种更简短的方式来编写上面例子中的闭包表达式。Swift 的 String 类型定义了关于大于号（>）的字符串实现，其作为一个函数接受两个 String 类型的参数并返回 Bool 类型的值。而这正好与 sorted(by:) 方法的参数需要的函数类型相符合。
 
 ```
 reversedNames = names.sorted(by: >)
 ```
 
-###尾随闭包
+### 尾随闭包
 果你需要将一个很长的闭包表达式作为最后一个参数传递给函数，可以使用尾随闭包来增强函数的可读性
 
 ```
@@ -734,7 +734,7 @@ reversedNames = names.sorted() { $0 > $1 }
 reversedNames = names.sorted { $0 > $1 }
 ```
 
-##闭包逃逸
+## 闭包逃逸
 当一个闭包作为参数传到一个函数中，但是这个闭包在函数返回之后才被执行，我们称该闭包从函数中逃逸。当你定义接受闭包作为参数的函数时，你可以在参数名之前标注 @escaping，用来指明这个闭包是允许“逃逸”出这个函数的。
 
 ```
@@ -764,7 +764,7 @@ class SomeClass {
 }
 ```
 
-###自动闭包
+### 自动闭包
 自动闭包是一种自动创建的闭包，用于包装传递给函数作为参数的表达式。这种闭包不接受任何参数，当它被调用的时候，会返回被包装在其中的表达式的值。这种便利语法让你能够省略闭包的花括号，用一个普通的表达式来代替显式的闭包。
 
 ```
@@ -813,8 +813,8 @@ for customerProvider in customerProviders {
 // 打印 "Now serving Daniella!"
 ```
 
-##枚举
-###枚举语法
+## 枚举
+### 枚举语法
 ```
 enum CompassPoint {
     case north
@@ -842,7 +842,7 @@ enum Planet {
 }
 ```
 
-###使用 Switch 语句匹配枚举值
+### 使用 Switch 语句匹配枚举值
 ```
 directionToHead = .south
 switch directionToHead {
@@ -872,7 +872,7 @@ default:
 // 打印 "Mostly harmless”
 ```
 
-###关联值
+### 关联值
 ```
 enum Barcode {
     case upc(Int, Int, Int, Int)
@@ -906,7 +906,7 @@ case let .qrCode(productCode):
 // 输出 "QR code: ABCDEFGHIJKLMNOP."
 ```
 
-###原始值
+### 原始值
 ```
 enum ASCIIControlCharacter: Character {
     case tab = "\t"
@@ -920,7 +920,7 @@ enum ASCIIControlCharacter: Character {
 的关联值可以变化。
 ```
 
-###原始值的隐式赋值
+### 原始值的隐式赋值
 ```
 enum Planet: Int {
     case mercury = 1, venus, earth, mars,
@@ -941,13 +941,13 @@ enum CompassPoint: String {
 }
 ```
 
-###使用原始值初始化枚举实例
+### 使用原始值初始化枚举实例
 ```
 let possiblePlanet = Planet(rawValue: 7)
 // possiblePlanet 类型为 Planet? 值为 Planet.uranus
 ```
 
-##递归枚举
+### 递归枚举
 递归枚举是一种枚举类型，它有一个或多个枚举成员使用该枚举类型的实例作为关联值。使用递归枚举时，编译器会插入一个间接层。你可以在枚举成员前加上indirect来表示该成员可递归。
 
 ```
@@ -987,8 +987,8 @@ print(evaluate(product))
 // 打印 "18"
 ```
 
-##类
-###类和结构体对比
+## 类
+### 类和结构体对比
 共同点:<br>
 
 - 定义属性用于存储值  
@@ -1010,7 +1010,7 @@ print(evaluate(product))
 结构体总是通过被复制的方式在代码中传递，不使用引用计数。
 ```
 
-###定义语法
+### 定义语法
 ```
 struct Resolution {
     var width = 0
@@ -1024,16 +1024,16 @@ class VideoMode {
 }
 ```
 
-###属性
+### 属性
 与 Objective-C 语言不同的是，Swift 允许直接设置结构体属性的子属性。上面的最后一个例子，就是直接设置了someVideoMode中resolution属性的width这个子属性，以上操作并不需要重新为整个resolution属性设置新值。
 
-###结构体类型的成员逐一构造器
+### 结构体类型的成员逐一构造器
 ```
 let vga = Resolution(width:640, height: 480)
 ```
 
-###结构体和枚举是值类型,类是引用类型
-###恒等运算符
+### 结构体和枚举是值类型,类是引用类型
+### 恒等运算符
 - 等价于（===）
 - 不等价于（!==）
 
@@ -1052,7 +1052,7 @@ f tenEighty === alsoTenEighty {
   照设计者定义的评判标准，因此相对于“相等”来说，这是
   一种更加合适的叫法。
 
-###类和结构体的选择
+### 类和结构体的选择
 何时用类：
 
 - 该数据结构的主要目的是用来封装少量相关简单数据值。
@@ -1066,13 +1066,13 @@ f tenEighty === alsoTenEighty {
 - 一定范围内的路径，封装一个start属性和length属性，两者均为Int类型。
 - 三维坐标系内一点，封装x，y和z属性，三者均为Double类型。
 
-###字符串、数组、和字典类型的赋值与复制行为
+### 字符串、数组、和字典类型的赋值与复制行为
 Swift 中，许多基本类型，诸如String，Array和Dictionary类型均以结构体的形式实现。这意味着被赋值给新的常量或变量，或者被传入函数或方法中时，它们的值会被拷贝。
 
 Objective-C 中NSString，NSArray和NSDictionary类型均以类的形式实现，而并非结构体。它们在被赋值或者被传入函数或方法时，不会发生值拷贝，而是传递现有实例的引用。
 
-###属性
-###延迟存储属性
+### 属性
+### 延迟存储属性
 延迟存储属性是指当第一次被调用的时候才会计算其初始值的属性。在属性声明前使用 lazy 来标示一个延迟存储属性。
 
 ```
@@ -1090,7 +1090,7 @@ class DataManager {
 一次。
 ```
 
-###计算属性
+### 计算属性
 除存储属性外，类、结构体和枚举可以定义计算属性。计算属性不直接存储值，而是提供一个 getter 和一个可选的 setter，来间接获取和设置其他属性或变量的值。
 
 ```
@@ -1123,7 +1123,7 @@ print("square.origin is now at (\(square.origin.x), \(square.origin.y))")
 // 打印 "square.origin is now at (10.0, 10.0)”
 ```
 
-###简化Setter
+### 简化Setter
 如果计算属性的 setter 没有定义表示新值的参数名，则可以使用默认名称 newValue
 
 ```
@@ -1144,7 +1144,7 @@ struct AlternativeRect {
 }
 ```
 
-###只读计算属性
+### 只读计算属性
 只有 getter 没有 setter 的计算属性就是只读计算属性。只读计算属性总是返回一个值，可以通过点运算符访问，但不能设置新的值。
 
 只读计算属性的声明可以去掉 get 关键字和花括号：
@@ -1161,7 +1161,7 @@ print("the volume of fourByFiveByTwo is \(fourByFiveByTwo.volume)")
 // 打印 "the volume of fourByFiveByTwo is 40.0"
 ```
 
-###属性观察器
+### 属性观察器
 - willSet 在新的值被设置之前调用
 - didSet 在新的值被设置之后立即调用
 
@@ -1204,7 +1204,7 @@ stepCounter.totalSteps = 896
 了拷入拷出模式：即在函数内部使用的是参数的 copy，函数结束后，又对参数重新赋值。
 ```
 
-###全局变量和局部变量
+### 全局变量和局部变量
 计算属性和属性观察器所描述的功能也可以用于全局变量和局部变量。全局变量是在函数、方法、闭包或任何类型之外定义的变量。局部变量是在函数、方法或闭包内部定义的变量。
 
 ```
@@ -1214,7 +1214,7 @@ lazy修饰符。
 局部范围的常量或变量从不延迟计算。
 ```
 
-###类型属性
+### 类型属性
 实例属性属于一个特定类型的实例，每创建一个实例，实例都拥有属于自己的一套属性值，实例之间的属性相互独立。
 
 也可以为类型本身定义属性，无论创建了多少个该类型的实例，这些属性都只有唯一一份。这种属性就是类型属性。
@@ -1231,7 +1231,7 @@ lazy修饰符。
 访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 lazy 修饰符。
 ```
 
-###类型属性语法
+### 类型属性语法
 ```
 struct SomeStructure {
     static var storedTypeProperty = "Some value."
@@ -1296,8 +1296,8 @@ struct AudioChannel {
 察器被再次调用。
 ```
 
-##方法
-###在实例方法中修改值类型
+## 方法
+### 在实例方法中修改值类型
 结构体和枚举是值类型。默认情况下，值类型的属性不能在它的实例方法中被修改。
 
 但是，如果你确实需要在某个特定的方法中修改结构体或者枚举的属性，你可以为这个方法选择可变(mutating)行为，然后就可以从其方法内部改变它的属性；并且这个方法做的任何改变都会在方法执行结束时写回到原始结构中。方法还可以给它隐含的self属性赋予一个全新的实例，这个新实例在方法结束时会替换现存实例。
@@ -1343,7 +1343,7 @@ ovenLight.next()
 // ovenLight 现在等于 .Off
 ```
 
-###类方法
+### 类方法
 实例方法是被某个类型的实例调用的方法。你也可以定义在类型本身上调用的方法，这种方法就叫做类型方法。在方法的func关键字之前加上关键字static，来指定类型方法。类还可以用关键字class来允许子类重写父类的方法实现。
 
 ```
@@ -1362,8 +1362,8 @@ class SomeClass {
 SomeClass.someTypeMethod()
 ```
 
-##下标
-###定义下标属性
+## 下标
+### 定义下标属性
 与定义实例方法类似，定义下标使用subscript关键字，指定一个或多个输入参数和返回类型；与实例方法不同的是，下标可以设定为读写或只读。
 
 ```
@@ -1378,7 +1378,7 @@ subscript(index: Int) -> Int {
 }
 ```
 
-###下标选项
+### 下标选项
 下标可以接受任意数量的入参，并且这些入参可以是任意类型。下标的返回值也可以是任意类型。下标可以使用变量参数和可变参数，但不能使用输入输出参数，也不能给参数设置默认值。
 一个类或结构体可以根据自身需要提供多个下标实现，使用下标时将通过入参的数量和类型进行区分，自动匹配合适的下标，这就是下标的重载。  
 重写indexIsValidForRow方法可以判断下标是否合法。
@@ -1408,27 +1408,27 @@ struct Matrix {
 }
 ```
 
-##继承
-###继承语法
+## 继承
+### 继承语法
 ```
 class Bicycle: Vehicle {
     var hasBasket = false
 }
 ```
 
-###重写
+### 重写
 子类可以为继承来的实例方法，类方法，实例属性，或下标提供自己定制的实现。我们把这种行为叫重写。
 
 如果要重写某个特性，你需要在重写定义的前面加上override关键字。这么做，你就表明了你是想提供一个重写版本，而非错误地提供了一个相同的定义。意外的重写行为可能会导致不可预知的错误，任何缺少override关键字的重写都会在编译时被诊断为错误。
 
-###super
+### super
 在合适的地方，你可以通过使用super前缀来访问超类版本的方法，属性或下标：
 
 - 在方法someMethod()的重写实现中，可以通过super.someMethod()来调用超类版本的someMethod()方法。
 - 在属性someProperty的 getter 或 setter 的重写实现中，可以通过super.someProperty来访问超类版本的someProperty属性。
 - 在下标的重写实现中，可以通过super[someIndex]来访问超类版本中的相同下标。
 
-###重写属性
+### 重写属性
 你可以重写继承来的实例属性或类型属性，提供自己定制的 getter 和 setter，或添加属性观察器使重写的属性可以观察属性值什么时候发生改变。
 
 你在重写一个属性时，必需将它的名字和类型都写出来。这样才能使编译器去检查你重写的属性是与超类中同名同类型的属性相匹配的。
@@ -1471,7 +1471,7 @@ class AutomaticCar: Car {
 }
 ```
 
-###防止重写
+### 防止重写
 你可以通过把方法，属性或下标标记为final来防止它们被重写，只需要在声明关键字前加上final修饰符即可（例如：final var，final func，final class func，以及final subscript）。
 
 如果你重写了带有final标记的方法，属性或下标，在编译时会报错。
@@ -1479,3 +1479,450 @@ class AutomaticCar: Car {
 你可以通过在关键字class前添加final修饰符（final class）来将整个类标记为 final 的。这样的类是不可被继承的，试图继承这样的类会导致编译报错。
 
 
+## 构造过程
+### 存储属性的初始赋值
+类和结构体在创建实例时，必须为所有存储型属性设置合适的初始值。存储型属性的值不能处于一个未知的状态。
+
+你可以在构造器中为存储型属性赋初值，也可以在定义属性时为其设置默认值。
+
+```
+注意
+当你为存储型属性设置默认值或者在构造器中为其赋值时，它们的值是被直接设置的，不会触发任何属性观察者。
+```
+
+### 构造器
+```
+init() {
+    // 在此处执行构造过程
+}
+```
+
+### 参数的内部名称和外部名称
+跟函数和方法参数相同，构造参数也拥有一个在构造器内部使用的参数名字和一个在调用构造器时使用的外部参数名字。
+
+```
+struct Color {
+    let red, green, blue: Double
+    init(red: Double, green: Double, blue: Double) {
+        self.red   = red
+        self.green = green
+        self.blue  = blue
+    }
+    init(white: Double) {
+        red   = white
+        green = white
+        blue  = white
+    }
+}
+```
+注意，如果不通过外部参数名字传值，你是没法调用这个构造器的。只要构造器定义了某个外部参数名，你就必须使用它，忽略它将导致编译错误：
+
+```
+let veryGreen = Color(0.0, 1.0, 0.0)
+// 报编译时错误，需要外部名称
+```
+
+### 不带外部名的构造器参数
+如果你不希望为构造器的某个参数提供外部名字，你可以使用下划线(_)来显式描述它的外部名，以此重写上面所说的默认行为。
+
+```
+struct Celsius {
+    var temperatureInCelsius: Double
+    init(fromFahrenheit fahrenheit: Double) {
+        temperatureInCelsius = (fahrenheit - 32.0) / 1.8
+    }
+    init(fromKelvin kelvin: Double) {
+        temperatureInCelsius = kelvin - 273.15
+    }
+    init(_ celsius: Double){
+        temperatureInCelsius = celsius
+    }
+}
+let bodyTemperature = Celsius(37.0)
+// bodyTemperature.temperatureInCelsius 为 37.0
+```
+
+### 构造过程中常量属性的修改
+你可以在构造过程中的任意时间点给常量属性指定一个值，只要在构造过程结束时是一个确定的值。一旦常量属性被赋值，它将永远不可更改。
+
+```
+注意
+对于类的实例来说，它的常量属性只能在定义它的类的构造过程中修改；不能在子类中修改。
+```
+
+### 默认构造器
+如果结构体或类的所有属性都有默认值，同时没有自定义的构造器，那么 Swift 会给这些结构体或类提供一个默认构造器（default initializers）。这个默认构造器将简单地创建一个所有属性值都设置为默认值的实例。
+
+```
+class ShoppingListItem {
+    var name: String?
+    var quantity = 1
+    var purchased = false
+}
+var item = ShoppingListItem()
+```
+
+尽管代码中没有显式为name属性设置默认值，但由于name是可选字符串类型，它将默认设置为nil
+
+### 结构体的逐一成员构造器
+除了上面提到的默认构造器，如果结构体没有提供自定义的构造器，它们将自动获得一个逐一成员构造器，即使结构体的存储型属性没有默认值。
+
+```
+struct Size {
+    var width = 0.0, height = 0.0
+}
+let twoByTwo = Size(width: 2.0, height: 2.0)
+```
+
+### 值类型的构造器代理
+构造器可以通过调用其它构造器来完成实例的部分构造过程。这一过程称为构造器代理，它能减少多个构造器间的代码重复。
+
+```
+struct Rect {
+    var origin = Point()
+    var size = Size()
+    init() {}
+    init(origin: Point, size: Size) {
+        self.origin = origin
+        self.size = size
+    }
+    init(center: Point, size: Size) {
+        let originX = center.x - (size.width / 2)
+        let originY = center.y - (size.height / 2)
+        self.init(origin: Point(x: originX, y: originY), size: size)
+    }
+}
+```
+
+如果你为某个值类型定义了一个自定义的构造器，你将无法访问到默认构造器（如果是结构体，还将无法访问逐一成员构造器）。这种限制可以防止你为值类型增加了一个额外的且十分复杂的构造器之后,仍然有人错误的使用自动生成的构造器
+
+```
+注意
+假如你希望默认构造器、逐一成员构造器以及你自己的自定义构造器都能用来创建实例，可以将自定义的构造
+器写到扩展（extension）中，而不是写在值类型的原始定义中。想查看更多内容，请查看扩展章节。
+```
+
+```
+注意
+如果你想用另外一种不需要自己定义init()和init(origin:size:)的方式来实现这个例子，请参考扩展。
+
+```
+
+### 类的继承和构造过程
+类里面的所有存储型属性——包括所有继承自父类的属性——都必须在构造过程中设置初始值。
+
+### 指定构造器和便利构造器
+指定构造器是类中最主要的构造器。一个指定构造器将初始化类中提供的所有属性，并根据父类链往上调用父类的构造器来实现父类的初始化。
+
+每一个类都必须拥有至少一个指定构造器。在某些情况下，许多类通过继承了父类中的指定构造器而满足了这个条件。
+
+便利构造器是类中比较次要的、辅助型的构造器。你可以定义便利构造器来调用同一个类中的指定构造器，并为其参数提供默认值。你也可以定义便利构造器来创建一个特殊用途或特定输入值的实例。
+
+```
+init(parameters) {
+    statements
+}
+
+//便利构造器也采用相同样式的写法，但需要在init关键字之前放置convenience关键字，
+并使用空格将它们俩分开：
+
+convenience init(parameters) {
+    statements
+}
+```
+
+### 类的构造器代理规则
+规则 1
+
+指定构造器必须调用其直接父类的的指定构造器。
+
+规则 2
+
+便利构造器必须调用同类中定义的其它构造器。
+
+规则 3
+
+便利构造器必须最终导致一个指定构造器被调用。
+
+一个更方便记忆的方法是：
+
+- 指定构造器必须总是向上代理
+- 便利构造器必须总是横向代理
+
+```
+注意
+这些规则不会影响类的实例如何创建。任何上图中展示的构造器都可以用来创建完全初始化的实例。这些规则
+只影响类定义如何实现。
+```
+
+### 两段式构造过程
+- 每个存储型属性被引入它们的类指定一个初始值。当每个存储型属性的初始值被确定后。
+- 它给每个类一次机会，在新实例准备使用之前进一步定制它们的存储型属性。
+
+```
+注意
+Swift 的两段式构造过程跟 Objective-C 中的构造过程类似。最主要的区别在于阶段 1，Objective-C 
+给每一个属性赋值0或空值（比如说0或nil）。Swift 的构造流程则更加灵活，它允许你设置定制的初始
+值，并自如应对某些属性不能以0或nil作为合法默认值的情况。
+```
+
+安全检查 1
+
+指定构造器必须保证它所在类引入的所有属性都必须先初始化完成，之后才能将其它构造任务向上代理给父类中的构造器。
+
+如上所述，一个对象的内存只有在其所有存储型属性确定之后才能完全初始化。为了满足这一规则，指定构造器必须保证它所在类引入的属性在它往上代理之前先完成初始化。
+
+安全检查 2
+
+指定构造器必须先向上代理调用父类构造器，然后再为继承的属性设置新值。如果没这么做，指定构造器赋予的新值将被父类中的构造器所覆盖。
+
+安全检查 3
+
+便利构造器必须先代理调用同一类中的其它构造器，然后再为任意属性赋新值。如果没这么做，便利构造器赋予的新值将被同一类中其它指定构造器所覆盖。
+
+安全检查 4
+
+构造器在第一阶段构造完成之前，不能调用任何实例方法，不能读取任何实例属性的值，不能引用self作为一个值。
+
+类实例在第一阶段结束以前并不是完全有效的。只有第一阶段完成后，该实例才会成为有效实例，才能访问属性和调用方法。
+
+
+阶段 1
+
+- 某个指定构造器或便利构造器被调用。
+- 完成新实例内存的分配，但此时内存还没有被初始化。
+- 指定构造器确保其所在类引入的所有存储型属性都已赋初值。存储型属性所属的内存完成初始化。
+- 指定构造器将调用父类的构造器，完成父类属性的初始化。
+- 这个调用父类构造器的过程沿着构造器链一直往上执行，直到到达构造器链的最顶部。
+- 当到达了构造器链最顶部，且已确保所有实例包含的存储型属性都已经赋值，这个实例的内存被认为已经完全初始化。此时阶段 1 完成。
+
+阶段 2
+
+- 从顶部构造器链一直往下，每个构造器链中类的指定构造器都有机会进一步定制实例。构造器此时可以访问self、修改它的属性并调用实例方法等等。
+- 最终，任意构造器链中的便利构造器可以有机会定制实例和使用self。
+
+### 构造器的继承和重写
+跟 Objective-C 中的子类不同，Swift 中的子类默认情况下不会继承父类的构造器。Swift 的这种机制可以防止一个父类的简单构造器被一个更精细的子类继承，并被错误地用来创建子类的实例。
+
+```
+注意
+父类的构造器仅会在安全和适当的情况下被继承。
+```
+
+假如你希望自定义的子类中能提供一个或多个跟父类相同的构造器，你可以在子类中提供这些构造器的自定义实现。
+
+```
+注意
+当你重写一个父类的指定构造器时，你总是需要写override修饰符，即使你的子类将父类的指定构造器重写
+为了便利构造器。
+```
+
+相反，如果你编写了一个和父类便利构造器相匹配的子类构造器，由于子类不能直接调用父类的便利构造器（每个规则都在上文类的构造器代理规则有所描述），因此，严格意义上来讲，你的子类并未对一个父类构造器提供重写。最后的结果就是，你在子类中“重写”一个父类便利构造器时，不需要加override前缀。
+
+```
+class Vehicle {
+    var numberOfWheels = 0
+    var description: String {
+        return "\(numberOfWheels) wheel(s)"
+    }
+}
+
+class Bicycle: Vehicle {
+    override init() {
+        super.init()
+        numberOfWheels = 2
+    }
+}
+```
+
+
+```
+注意
+子类可以在初始化时修改继承来的变量属性，但是不能修改继承来的常量属性。
+```
+
+### 构造器的自动继承
+如上所述，子类在默认情况下不会继承父类的构造器。但是如果满足特定条件，父类构造器是可以被自动继承的。
+
+规则 1
+
+如果子类没有定义任何指定构造器，它将自动继承所有父类的指定构造器。
+
+规则 2
+
+如果子类提供了所有父类指定构造器的实现——无论是通过规则 1 继承过来的，还是提供了自定义实现——它将自动继承所有父类的便利构造器。
+
+即使你在子类中添加了更多的便利构造器，这两条规则仍然适用。
+
+```
+注意
+对于规则 2，子类可以将父类的指定构造器实现为便利构造器。
+```
+
+### 可失败构造器
+如果一个类、结构体或枚举类型的对象，在构造过程中有可能失败，则为其定义一个可失败构造器。这里所指的“失败”是指，如给构造器传入无效的参数值，或缺少某种所需的外部资源，又或是不满足某种必要的条件等。
+
+其语法为在init关键字后面添加问号(init?)。
+
+
+```
+注意
+可失败构造器的参数名和参数类型，不能与其它非可失败构造器的参数名，及其参数类型相同。
+```
+
+可失败构造器会创建一个类型为自身类型的可选类型的对象。你通过return nil语句来表明可失败构造器在何种情况下应该“失败”。
+
+```
+注意
+严格来说，构造器都不支持返回值。因为构造器本身的作用，只是为了确保对象能被正确构造。因此你只是用return nil表明可失败构造器构造失败，而不要用关键字return来表明构造成功。
+```
+
+```
+struct Animal {
+    let species: String
+    init?(species: String) {
+        if species.isEmpty { return nil }
+        self.species = species
+    }
+}
+```
+
+### 枚举类型的可失败构造器
+```
+enum TemperatureUnit {
+    case Kelvin, Celsius, Fahrenheit
+    init?(symbol: Character) {
+        switch symbol {
+        case "K":
+            self = .Kelvin
+        case "C":
+            self = .Celsius
+        case "F":
+            self = .Fahrenheit
+        default:
+            return nil
+        }
+    }
+}
+```
+
+### 带原始值的枚举类型的可失败构造器
+带原始值的枚举类型会自带一个可失败构造器init?(rawValue:)，该可失败构造器有一个名为rawValue的参数，其类型和枚举类型的原始值类型一致，如果该参数的值能够和某个枚举成员的原始值匹配，则该构造器会构造相应的枚举成员，否则构造失败。
+
+```
+enum TemperatureUnit: Character {
+    case Kelvin = "K", Celsius = "C", Fahrenheit = "F"
+}
+
+let unknownUnit = TemperatureUnit(rawValue: "X")
+if unknownUnit == nil {
+    print("This is not a defined temperature unit, so initialization failed.")
+}
+```
+
+### 构造失败的传递
+可失败构造器可以横向或者纵向代理。
+
+无论是向上代理还是横向代理，如果你代理到的其他可失败构造器触发构造失败，整个构造过程将立即终止，接下来的任何构造代码不会再被执行。
+
+```
+注意
+可失败构造器也可以代理到其它的非可失败构造器。通过这种方式，你可以增加一个可能的失败状态到现有的
+构造过程中。
+```
+
+### 重写一个可失败构造器
+如同其它的构造器，你可以在子类中重写父类的可失败构造器。或者你也可以用子类的非可失败构造器重写一个父类的可失败构造器。这使你可以定义一个不会构造失败的子类，即使父类的构造器允许构造失败。
+
+注意，当你用子类的非可失败构造器重写父类的可失败构造器时，向上代理到父类的可失败构造器的唯一方式是对父类的可失败构造器的返回值进行强制解包。
+
+```
+注意
+你可以用非可失败构造器重写可失败构造器，但反过来却不行。
+```
+
+```
+class Document {
+    var name: String?
+    // 该构造器创建了一个 name 属性的值为 nil 的 document 实例
+    init() {}
+    // 该构造器创建了一个 name 属性的值为非空字符串的 document 实例
+    init?(name: String) {
+        self.name = name
+        if name.isEmpty { return nil }
+    }
+}
+
+class AutomaticallyNamedDocument: Document {
+    override init() {
+        super.init()
+        self.name = "[Untitled]"
+    }
+    override init(name: String) {
+        super.init()
+        if name.isEmpty {
+            self.name = "[Untitled]"
+        } else {
+            self.name = name
+        }
+    }
+}
+```
+你可以在子类的非可失败构造器中使用强制解包来调用父类的可失败构造器。
+
+```
+class UntitledDocument: Document {
+    override init() {
+        super.init(name: "[Untitled]")!
+    }
+}
+```
+
+### init!
+
+通常来说我们通过在init关键字后添加问号的方式（init?）来定义一个可失败构造器，但你也可以通过在init后面添加惊叹号的方式来定义一个可失败构造器（init!），该可失败构造器将会构建一个对应类型的隐式解包可选类型的对象。
+
+你可以在init?中代理到init!，反之亦然。你也可以用init?重写init!，反之亦然。你还可以用init代理到init!，不过，一旦init!构造失败，则会触发一个断言。
+
+### 必要构造器
+在类的构造器前添加required修饰符表明所有该类的子类都必须实现该构造器
+
+```
+class SomeClass {
+    required init() {
+        // 构造器的实现代码
+    }
+}
+```
+
+在子类重写父类的必要构造器时，必须在子类的构造器前也添加required修饰符，表明该构造器要求也应用于继承链后面的子类。在重写父类中必要的指定构造器时，不需要添加override修饰符：
+
+```
+class SomeSubclass: SomeClass {
+    required init() {
+        // 构造器的实现代码
+    }
+}
+```
+
+```
+注意
+如果子类继承的构造器能满足必要构造器的要求，则无须在子类中显式提供必要构造器的实现。
+```
+
+### 通过闭包或函数设置属性的默认值
+```
+class SomeClass {
+    let someProperty: SomeType = {
+        // 在这个闭包中给 someProperty 创建一个默认值
+        // someValue 必须和 SomeType 类型相同
+        return someValue
+    }()
+}
+```
+
+```
+注意
+如果你使用闭包来初始化属性，请记住在闭包执行时，实例的其它部分都还没有初始化。这意味着你不能在闭
+包里访问其它属性，即使这些属性有默认值。同样，你也不能使用隐式的self属性，或者调用任何实例方法。
+```
