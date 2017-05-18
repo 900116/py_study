@@ -1444,7 +1444,7 @@ class Car: Vehicle {
 }
 ```
 
-``
+```
 注意
 如果你在重写属性中提供了 setter，那么你也一定要提供 getter。如果你不想在重写版本中
 的 getter 里修改继承来的属性值，你可以直接通过super.someProperty来返回继承来的值，
