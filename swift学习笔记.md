@@ -734,7 +734,7 @@ reversedNames = names.sorted() { $0 > $1 }
 reversedNames = names.sorted { $0 > $1 }
 ```
 
-## 闭包逃逸
+### 闭包逃逸
 当一个闭包作为参数传到一个函数中，但是这个闭包在函数返回之后才被执行，我们称该闭包从函数中逃逸。当你定义接受闭包作为参数的函数时，你可以在参数名之前标注 @escaping，用来指明这个闭包是允许“逃逸”出这个函数的。
 
 ```
@@ -2291,4 +2291,380 @@ func processFile(filename: String) throws {
 ```
 注意
 即使没有涉及到错误处理，你也可以使用defer语句。
+```
+
+## 类型转换
+### as? 和 as!
+某类型的一个常量或变量可能在幕后实际上属于一个子类。当确定是这种情况时，你可以尝试向下转到它的子类型，用类型转换操作符（as? 或 as!）。
+
+因为向下转型可能会失败，类型转型操作符带有两种不同形式。条件形式as? 返回一个你试图向下转成的类型的可选值。强制形式 as! 把试图向下转型和强制解包（转换结果结合为一个操作。
+
+当你不确定向下转型可以成功时，用类型转换的条件形式（as?）。条件形式的类型转换总是返回一个可选值，并且若下转是不可能的，可选值将是 nil。这使你能够检查向下转型是否成功。
+
+```
+注意
+转换没有真的改变实例或它的值。根本的实例保持不变；只是简单地把它作为它被转换成的类型来使用。
+```
+
+### Any 和 AnyObject 的类型转换
+Swift 为不确定类型提供了两种特殊的类型别名：
+
+- Any 可以表示任何类型，包括函数类型。
+- AnyObject 可以表示任何类类型的实例。
+
+```
+注意
+Any类型可以表示所有类型的值，包括可选类型。Swift 会在你用Any类型来表示一个可选值的时候，给你一
+个警告。如果你确实想使用Any类型来承载可选值，你可以使用as操作符显式转换为Any，如下所示：
+
+let optionalNumber: Int? = 3
+things.append(optionalNumber)        // 警告
+things.append(optionalNumber as Any) // 没有警告
+```
+
+## 嵌套类型
+### 嵌套类型实践
+```
+struct BlackjackCard {
+    // 嵌套的 Suit 枚举
+    enum Suit: Character {
+       case Spades = "♠", Hearts = "♡", Diamonds = "♢", Clubs = "♣"
+    }
+
+    // 嵌套的 Rank 枚举
+    enum Rank: Int {
+       case Two = 2, Three, Four, Five, Six, Seven, Eight, Nine, Ten
+       case Jack, Queen, King, Ace
+       struct Values {
+           let first: Int, second: Int?
+       }
+       var values: Values {
+        switch self {
+        case .Ace:
+            return Values(first: 1, second: 11)
+        case .Jack, .Queen, .King:
+            return Values(first: 10, second: nil)
+        default:
+            return Values(first: self.rawValue, second: nil)
+            }
+       }
+    }
+
+    // BlackjackCard 的属性和方法
+    let rank: Rank, suit: Suit
+    var description: String {
+        var output = "suit is \(suit.rawValue),"
+        output += " value is \(rank.values.first)"
+        if let second = rank.values.second {
+            output += " or \(second)"
+        }
+        return output
+    }
+}
+
+
+let heartsSymbol = BlackjackCard.Suit.Hearts.rawValue
+// 红心符号为 “♡”
+```
+
+## 扩展
+### 扩展语法
+```
+extension SomeType {
+    // 为 SomeType 添加的新功能写到这里
+}
+
+extension SomeType: SomeProtocol, AnotherProctocol {
+    // 协议实现写到这里
+}
+```
+
+```
+注意
+如果你通过扩展为一个已有类型添加新功能，那么新功能对该类型的所有已有实例都是可用的，即使它们是在
+这个扩展定义之前创建的。
+```
+
+### 计算型属性
+扩展可以为已有类型添加计算型实例属性和计算型类型属性。
+
+```
+extension Double {
+    var km: Double { return self * 1_000.0 }
+    var m : Double { return self }
+    var cm: Double { return self / 100.0 }
+    var mm: Double { return self / 1_000.0 }
+    var ft: Double { return self / 3.28084 }
+}
+let oneInch = 25.4.mm
+print("One inch is \(oneInch) meters")
+// 打印 “One inch is 0.0254 meters”
+let threeFeet = 3.ft
+print("Three feet is \(threeFeet) meters")
+// 打印 “Three feet is 0.914399970739201 meters”
+```
+
+```
+注意
+扩展可以添加新的计算型属性，但是不可以添加存储型属性，也不可以为已有属性添加属性观察器。
+```
+
+### 构造器
+```
+注意
+如果你使用扩展为一个值类型添加构造器，同时该值类型的原始实现中未定义任何定制的构造器且所有存储属
+性提供了默认值，那么我们就可以在扩展中的构造器里调用默认构造器和逐一成员构造器。
+正如在值类型的构造器代理中描述的，如果你把定制的构造器写在值类型的原始实现中，上述规则将不再适
+用。
+```
+
+```
+注意
+如果你使用扩展提供了一个新的构造器，你依旧有责任确保构造过程能够让实例完全初始化。
+```
+
+### 方法
+```
+extension Int {
+    func repetitions(task: () -> Void) {
+        for _ in 0..<self {
+            task()
+        }
+    }
+}
+
+//可变实例方法
+extension Int {
+    mutating func square() {
+        self = self * self
+    }
+}
+
+//下标
+extension Int {
+    subscript(digitIndex: Int) -> Int {
+        var decimalBase = 1
+        for _ in 0..<digitIndex {
+            decimalBase *= 10
+        }
+        return (self / decimalBase) % 10
+    }
+}
+746381295[0]
+// 返回 5
+746381295[1]
+// 返回 9
+746381295[2]
+// 返回 2
+746381295[8]
+// 返回 7
+```
+
+### 嵌套类
+```
+extension Int {
+    enum Kind {
+        case Negative, Zero, Positive
+    }
+    var kind: Kind {
+        switch self {
+        case 0:
+            return .Zero
+        case let x where x > 0:
+            return .Positive
+        default:
+            return .Negative
+        }
+    }
+}
+```
+
+```
+注意
+由于已知 number.kind 是 Int.Kind 类型，因此在 switch 语句中，Int.Kind 中的所有成员值都可
+以使用简写形式，例如使用 . Negative 而不是 Int.Kind.Negative。
+```
+
+## 协议
+### 协议语法
+```
+protocol SomeProtocol {
+    // 这里是协议的定义部分
+}
+```
+### 属性要求
+协议可以要求遵循协议的类型提供特定名称和类型的实例属性或类型属性。
+
+```
+protocol SomeProtocol {
+    var mustBeSettable: Int { get set }
+    var doesNotNeedToBeSettable: Int { get }
+    static var someTypeProperty: Int { get set }
+}
+```
+
+### 方法要求
+协议可以要求遵循协议的类型实现某些指定的实例方法或类方法。
+
+```
+protocol SomeProtocol {
+    static func someTypeMethod()
+    func random() -> Double
+    //mutaing方法
+    mutating func toggle()
+    //构造器方法
+    init(someParameter: Int)
+}
+```
+
+```
+注意
+实现协议中的 mutating 方法时，若是类类型，则不用写 mutating 关键字。而对于结构体和枚举，则必
+须写 mutating 关键字。
+```
+
+```
+注意
+如果类已经被标记为 final，那么不需要在协议构造器的实现中使用 required 修饰符，因为 final 类不能有子类。关于 final 修饰符的更多内容，请参见防止重写。
+```
+
+### 构造器要求在类中的实现
+```
+class SomeClass: SomeProtocol {
+    required init(someParameter: Int) {
+        // 这里是构造器的实现部分
+    }
+}
+```
+
+```
+注意
+如果类已经被标记为 final，那么不需要在协议构造器的实现中使用 required 修饰符，因为 final 类
+不能有子类。
+```
+
+如果一个子类重写了父类的指定构造器，并且该构造器满足了某个协议的要求，那么该构造器的实现需要同时
+标注 required 和 override修饰符
+
+```
+protocol SomeProtocol {
+    init()
+}
+
+class SomeSuperClass {
+    init() {
+        // 这里是构造器的实现部分
+    }
+}
+
+class SomeSubClass: SomeSuperClass, SomeProtocol {
+    // 因为遵循协议，需要加上 required
+    // 因为继承自父类，需要加上 override
+    required override init() {
+        // 这里是构造器的实现部分
+    }
+}
+```
+
+### 可失败构造器要求
+遵循协议的类型可以通过可失败构造器（init?）或非可失败构造器（init）来满足协议中定义的可失败构造器要求。协议中定义的非可失败构造器要求可以通过非可失败构造器（init）或隐式解包可失败构造器（init!）来满足。
+
+### 协议作为类型
+协议可以像其他普通类型一样使用，使用场景如下：
+
+- 作为函数、方法或构造器中的参数类型或返回值类型
+- 作为常量、变量或属性的类型
+- 作为数组、字典或其他容器中的元素类型
+
+```
+注意
+协议是一种类型，因此协议类型的名称应与其他类型（例如 Int，Double，String）的写法相同，使用大
+写字母开头的驼峰式写法，例如（FullyNamed 和 RandomNumberGenerator）。
+```
+
+### 通过扩展添加协议一致性
+```
+注意
+通过扩展令已有类型遵循并符合协议时，该类型的所有实例也会随之获得协议中定义的各项功能。
+```
+
+```
+注意
+即使满足了协议的所有要求，类型也不会自动遵循协议，必须显式地遵循协议。
+```
+
+### 类类型专属协议
+你可以在协议的继承列表中，通过添加 class 关键字来限制协议只能被类类型遵循，而结构体或枚举不能遵循该协议。
+
+```
+protocol SomeClassOnlyProtocol: class, SomeInheritedProtocol {
+    // 这里是类类型专属协议的定义部分
+}
+```
+
+```
+注意
+当协议定义的要求需要遵循协议的类型必须是引用语义而非值语义时，应该采用类类型专属协议。
+```
+
+### 协议合成
+有时候需要同时遵循多个协议，你可以将多个协议采用 SomeProtocol & AnotherProtocol 这样的格式进行组合，称为 协议合成（protocol composition）。
+
+```
+func wishHappyBirthday(to celebrator: Named & Aged) {
+    print("Happy birthday, \(celebrator.name), you're \(celebrator.age)!")
+}
+```
+
+### 检查协议一致性
+
+- is 用来检查实例是否符合某个协议，若符合则返回 true，否则返回 false。
+- as? 返回一个可选值，当实例符合某个协议时，返回类型为协议类型的可选值，否则返回 nil。
+- as! 将实例强制向下转换到某个协议类型，如果强转失败，会引发运行时错误。
+
+### 可选的协议要求
+在协议中使用 optional 关键字作为前缀来定义可选要求。
+可选要求用在你需要和 Objective-C 打交道的代码中。协议和可选要求都必须带上@objc属性。
+
+```
+@objc protocol CounterDataSource {
+    @objc optional func incrementForCount(count: Int) -> Int
+    @objc optional var fixedIncrement: Int { get }
+}
+```
+
+```
+注意
+严格来讲，CounterDataSource 协议中的方法和属性都是可选的，因此遵循协议的类可以不实现这些要
+求，尽管技术上允许这样做，不过最好不要这样写。
+```
+
+### 协议扩展
+协议可以通过扩展来为遵循协议的类型提供属性、方法以及下标的实现。通过这种方式，你可以基于协议本身来实现这些功能，而无需在每个遵循协议的类型中都重复同样的实现，也无需使用全局函数。
+
+```
+extension RandomNumberGenerator {
+    func randomBool() -> Bool {
+        return random() > 0.5
+    }
+}
+```
+
+### 为协议扩展添加限制条件
+在扩展协议的时候，可以指定一些限制条件，只有遵循协议的类型满足这些限制条件时，才能获得协议扩展提供的默认实现。这些限制条件写在协议名之后，使用 where 子句来描述，正如Where子句中所描述的。
+
+例如，你可以扩展 CollectionType 协议，但是只适用于集合中的元素遵循了 TextRepresentable 协议的情况：
+
+```
+extension Collection where Iterator.Element: TextRepresentable {
+    var textualDescription: String {
+        let itemsAsText = self.map { $0.textualDescription }
+        return "[" + itemsAsText.joined(separator: ", ") + "]"
+    }
+}
+```
+
+```
+注意
+如果多个协议扩展都为同一个协议要求提供了默认实现，而遵循协议的类型又同时满足这些协议扩展的限制条件，那么将会使用限制条件最多的那个协议扩展提供的默认实现。
 ```
