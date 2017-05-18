@@ -1926,3 +1926,369 @@ class SomeClass {
 如果你使用闭包来初始化属性，请记住在闭包执行时，实例的其它部分都还没有初始化。这意味着你不能在闭
 包里访问其它属性，即使这些属性有默认值。同样，你也不能使用隐式的self属性，或者调用任何实例方法。
 ```
+
+## 析构过程
+### 析构语法
+
+```
+deinit {
+    // 执行析构过程
+}
+```
+
+## 自动引用计数
+### weak
+
+```
+class Person {
+    let name: String
+    init(name: String) { self.name = name }
+    var apartment: Apartment?
+    deinit { print("\(name) is being deinitialized") }
+}
+
+class Apartment {
+    let unit: String
+    init(unit: String) { self.unit = unit }
+    weak var tenant: Person?
+    deinit { print("Apartment \(unit) is being deinitialized") }
+}
+```
+
+```
+注意
+当 ARC 设置弱引用为nil时，属性观察不会被触发。
+```
+
+```
+注意
+在使用垃圾收集的系统里，弱指针有时用来实现简单的缓冲机制，因为没有强引用的对象只会在内存压力触发
+垃圾收集时才被销毁。但是在 ARC 中，一旦值的最后一个强引用被移除，就会被立即销毁，这导致弱引用并
+不适合上面的用途。
+```
+
+### 无主引用
+和弱引用类似，无主引用不会牢牢保持住引用的实例。和弱引用不同的是，无主引用在其他实例有相同或者更长的生命周期时使用。你可以在声明属性或者变量时，在前面加上关键字unowned表示这是一个无主引用。
+
+```
+重要
+使用无主引用，你必须确保引用始终指向一个未销毁的实例。
+如果你试图在实例被销毁后，访问该实例的无主引用，会触发运行时错误。
+```
+
+由于信用卡总是关联着一个客户，因此将customer属性定义为无主引用，用以避免循环强引用：
+
+```
+class Customer {
+    let name: String
+    var card: CreditCard?
+    init(name: String) {
+        self.name = name
+    }
+    deinit { print("\(name) is being deinitialized") }
+}
+
+class CreditCard {
+    let number: UInt64
+    unowned let customer: Customer
+    init(number: UInt64, customer: Customer) {
+        self.number = number
+        self.customer = customer
+    }
+    deinit { print("Card #\(number) is being deinitialized") }
+}
+```
+
+```
+注意
+上面的例子展示了如何使用安全的无主引用。对于需要禁用运行时的安全检查的情况（例如，出于性能方面的
+原因），Swift还提供了不安全的无主引用。与所有不安全的操作一样，你需要负责检查代码以确保其安全
+性。 你可以通过unowned(unsafe)来声明不安全无主引用。如果你试图在实例被销毁后，访问该实例的不
+安全无主引用，你的程序会尝试访问该实例之前所在的内存地址，这是一个不安全的操作。
+```
+
+### 无主引用以及隐式解析可选属性
+Person和Apartment的例子展示了两个属性的值都允许为nil，并会潜在的产生循环强引用。这种场景最适合用弱引用来解决。
+
+Customer和CreditCard的例子展示了一个属性的值允许为nil，而另一个属性的值不允许为nil，这也可能会产生循环强引用。这种场景最适合通过无主引用来解决。
+
+然而，存在着第三种场景，在这种场景中，两个属性都必须有值，并且初始化完成后永远不会为nil。在这种场景中，需要一个类使用无主属性，而另外一个类使用隐式解析可选属性。
+
+```
+class Country {
+    let name: String
+    var capitalCity: City!
+    init(name: String, capitalName: String) {
+        self.name = name
+        self.capitalCity = City(name: capitalName, country: self)
+    }
+}
+
+class City {
+    let name: String
+    unowned let country: Country
+    init(name: String, country: Country) {
+        self.name = name
+        self.country = country
+    }
+}
+```
+
+### 闭包引起的循环强引用
+```
+lass HTMLElement {
+
+    let name: String
+    let text: String?
+
+    lazy var asHTML: Void -> String = {
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+
+}
+```
+
+```
+注意
+asHTML声明为lazy属性，因为只有当元素确实需要被处理为 HTML 输出的字符串时，才需要使用asHTML。
+也就是说，在默认的闭包中可以使用self，因为只有当初始化完成以及self确实存在后，才能访问lazy属
+性。
+```
+
+```
+注意
+虽然闭包多次使用了self，它只捕获HTMLElement实例的一个强引用。
+```
+
+### 解决闭包引起的循环强引用
+
+在定义闭包时同时定义捕获列表作为闭包的一部分，通过这种方式可以解决闭包和类实例之间的循环强引用。捕获列表定义了闭包体内捕获一个或者多个引用类型的规则。跟解决两个类实例间的循环强引用一样，声明每个捕获的引用为弱引用或无主引用，而不是强引用。应当根据代码关系来决定使用弱引用还是无主引用。
+
+```
+注意
+Swift 有如下要求：只要在闭包内使用self的成员，就要用self.someProperty或者
+self.someMethod()（而不只是someProperty或someMethod()）。这提醒你可能会一不小心就捕获了
+self。
+```
+
+
+### 定义捕获列表
+```
+lazy var someClosure: (Int, String) -> String = {
+    [unowned self, weak delegate = self.delegate!] (index: Int, stringToProcess: String) -> String in
+    // 这里是闭包的函数体
+}
+```
+
+如果闭包没有指明参数列表或者返回类型，即它们会通过上下文推断，那么可以把捕获列表和关键字in放在闭包最开始的地方：
+
+```
+lazy var someClosure: Void -> String = {
+    [unowned self, weak delegate = self.delegate!] in
+    // 这里是闭包的函数体
+}
+```
+
+在闭包和捕获的实例总是互相引用并且总是同时销毁时，将闭包内的捕获定义为无主引用。
+
+```
+注意
+如果被捕获的引用绝对不会变为nil，应该用无主引用，而不是弱引用。
+```
+
+## 可选链式调用
+```
+注意
+Swift 的可选链式调用和 Objective-C 中向nil发送消息有些相像，但是 Swift 的可选链式调用可以应
+用于任意类型，并且能检查调用是否成功。
+```
+### 使用可选链式调用代替强制展开
+通过在想调用的属性、方法、或下标的可选值后面放一个问号（?），可以定义一个可选链。这一点很像在可选值后面放一个叹号（!）来强制展开它的值。它们的主要区别在于当可选值为空时可选链式调用只会调用失败，然而强制展开将会触发运行时错误。
+
+```
+let roomCount = john.residence!.numberOfRooms
+// 这会引发运行时错误
+
+if let roomCount = john.residence?.numberOfRooms {
+    print("John's residence has \(roomCount) room(s).")
+} else {
+    print("Unable to retrieve the number of rooms.")
+}
+// 打印 “Unable to retrieve the number of rooms.”
+```
+
+### 通过可选链式调用访问下标
+```
+注意
+通过可选链式调用访问可选值的下标时，应该将问号放在下标方括号的前面而不是后面。可选链式调用的问号
+一般直接跟在可选表达式的后面。
+```
+
+```
+john.residence?[0] = Room(name: "Bathroom")
+```
+
+### 访问可选类型的下标
+如果下标返回可选类型值，比如 Swift 中Dictionary类型的键的下标，可以在下标的结尾括号后面放一个问号来在其可选返回值上进行可选链式调用
+
+```
+var testScores = ["Dave": [86, 82, 84], "Bev": [79, 94, 81]]
+testScores["Dave"]?[0] = 91
+testScores["Bev"]?[0] += 1
+testScores["Brian"]?[0] = 72
+// "Dave" 数组现在是 [91, 82, 84]，"Bev" 数组现在是 [80, 94, 81]
+```
+
+### 连接多层可选链式调用
+可以通过连接多个可选链式调用在更深的模型层级中访问属性、方法以及下标。然而，多层可选链式调用不会增加返回值的可选层级。
+
+也就是说：
+
+- 如果你访问的值不是可选的，可选链式调用将会返回可选值。
+- 如果你访问的值就是可选的，可选链式调用不会让可选返回值变得“更可选”。
+
+因此：
+
+- 通过可选链式调用访问一个Int值，将会返回Int?，无论使用了多少层可选链式调用。
+- 类似的，通过可选链式调用访问Int?值，依旧会返回Int?值，并不会返回Int??。
+
+### 在方法的可选返回值上进行可选链式调用
+```
+if let beginsWithThe =
+    john.residence?.address?.buildingIdentifier()?.hasPrefix("The") {
+        if beginsWithThe {
+            print("John's building identifier begins with \"The\".")
+        } else {
+            print("John's building identifier does not begin with \"The\".")
+        }
+}
+```
+
+```
+注意
+在上面的例子中，在方法的圆括号后面加上问号是因为你要在buildingIdentifier()方法的可选返回值上
+进行可选链式调用，而不是方法本身。
+```
+
+## 异常处理
+### throw
+```
+enum VendingMachineError: Error {
+    case invalidSelection                    //选择无效
+    case insufficientFunds(coinsNeeded: Int) //金额不足
+    case outOfStock                          //缺货
+}
+
+throw VendingMachineError. insufficientFunds(coinsNeeded: 5)
+```
+
+### 处理错误
+swift 中有4种处理错误的方式。
+
+- 函数抛出错误
+- do - catch
+- 将错误进行可选处理
+- 或者用断言避免此种错误
+
+在调用一个能抛出错误的函数、方法或者构造器之前，加上try关键字，或者try?或try!这种变体。
+
+```
+注意
+Swift 中的错误处理和其他语言中用try，catch和throw进行异常处理很像。和其他语言中（包括 
+Objective-C ）的异常处理不同的是，Swift 中的错误处理并不涉及解除调用栈，这是一个计算代价高昂
+的过程。就此而言，throw语句的性能特性是可以和return语句相媲美的。
+```  
+
+### 用 throwing 函数传递错误
+为了表示一个函数、方法或构造器可以抛出错误，在函数声明的参数列表之后加上throws关键字。一个标有throws关键字的函数被称作throwing 函数。如果这个函数指明了返回值类型，throws关键词需要写在箭头（->）的前面。
+
+```
+func canThrowErrors() throws -> String
+func cannotThrowErrors() -> String
+```
+
+```
+注意
+只有 throwing 函数可以传递错误。任何在某个非 throwing 函数内部抛出的错误只能在函数内部处理。
+```
+
+### 用Do - Catch处理错误
+```
+do {
+    try expression
+    statements
+} catch pattern 1 {
+    statements
+} catch pattern 2 where condition {
+    statements
+}
+```
+
+### 将错误转换成可选值
+可以使用try?通过将错误转换成一个可选值来处理错误。如果在评估try?表达式时一个错误被抛出，那么表达式的值就是nil。
+
+```
+func someThrowingFunction() throws -> Int {
+    // ...
+}
+
+let x = try? someThrowingFunction()
+
+let y: Int?
+do {
+    y = try someThrowingFunction()
+} catch {
+    y = nil
+}
+
+func fetchData() -> Data? {
+    if let data = try? fetchDataFromDisk() { return data }
+    if let data = try? fetchDataFromServer() { return data }
+    return nil
+}
+```
+
+### 禁用错误传递
+有时你知道某个throwing函数实际上在运行时是不会抛出错误的，在这种情况下，你可以在表达式前面写try!来禁用错误传递，这会把调用包装在一个不会有错误抛出的运行时断言中。如果真的抛出了错误，你会得到一个运行时错误。
+
+```
+let photo = try! loadImage(atPath: "./Resources/John Appleseed.jpg")
+```
+
+### defer
+可以使用defer语句在即将离开当前代码块时执行一系列语句。该语句让你能执行一些必要的清理工作，不管是以何种方式离开当前代码块的——无论是由于抛出错误而离开，还是由于诸如return或者break的语句。
+
+defer语句将代码的执行延迟到当前的作用域退出之前。
+
+```
+func processFile(filename: String) throws {
+    if exists(filename) {
+        let file = open(filename)
+        defer {
+            close(file)
+        }
+        while let line = try file.readline() {
+            // 处理文件。
+        }
+        // close(file) 会在这里被调用，即作用域的最后。
+    }
+}
+```
+
+```
+注意
+即使没有涉及到错误处理，你也可以使用defer语句。
+```
