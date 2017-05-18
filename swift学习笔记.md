@@ -116,7 +116,8 @@ assert(age >= 0,"A person's age cannot be less than zero")
 
 ```
 注意：
-当代码使用优化编译的时候，断言将会被禁用，例如在 Xcode 中，使用默认的 target Release 配置选项来 build 时，断言会被禁用。
+当代码使用优化编译的时候，断言将会被禁用，例如在 Xcode 中，使用默认的 target Release 配置
+选项来 build 时，断言会被禁用。
 ```
 
 ##运算符
@@ -213,7 +214,8 @@ let message = "\(multiplier) times 2.5 is \(Double(multiplier) * 2.5)"
 
 ```
 注意：
-插值字符串中写在括号中的表达式不能包含非转义反斜杠 (\)，并且不能包含回车或换行符。不过，插值字符串可以包含其他字面量。
+插值字符串中写在括号中的表达式不能包含非转义反斜杠 (\)，并且不能包含回车或换行符。不过，插值字
+符串可以包含其他字面量。
 ```
 
 ###Unicode标量
@@ -231,9 +233,15 @@ print("unusualMenagerie has \(unusualMenagerie.characters.count) characters")
 
 ```
 注意：
-可扩展的字符群集可以组成一个或者多个 Unicode 标量。这意味着不同的字符以及相同字符的不同表示方式可能需要不同数量的内存空间来存储。所以 Swift 中的字符在一个字符串中并不一定占用相同的内存空间数量。因此在没有获取字符串的可扩展的字符群的范围时候，就不能计算出字符串的字符数量。如果您正在处理一个长字符串，需要注意characters属性必须遍历全部的 Unicode 标量，来确定字符串的字符数量。
+可扩展的字符群集可以组成一个或者多个 Unicode 标量。这意味着不同的字符以及相同字符的不同表示方
+式可能需要不同数量的内存空间来存储。所以 Swift 中的字符在一个字符串中并不一定占用相同的内存空
+间数量。因此在没有获取字符串的可扩展的字符群的范围时候，就不能计算出字符串的字符数量。如果您正
+在处理一个长字符串，需要注意characters属性必须遍历全部的 Unicode 标量，来确定字符串的字符数
+量。
 
-另外需要注意的是通过characters属性返回的字符数量并不总是与包含相同字符的NSString的length属性相同。NSString的length属性是利用 UTF-16 表示的十六位代码单元数字，而不是 Unicode 可扩展的字符群集。
+另外需要注意的是通过characters属性返回的字符数量并不总是与包含相同字符的NSString的length属
+性相同。NSString的length属性是利用 UTF-16 表示的十六位代码单元数字，而不是 Unicode 可扩
+展的字符群集。
 ```
 
 ###字符串比较
@@ -484,7 +492,8 @@ print(description)
 ```
 
 ```
-注意： fallthrough关键字不会检查它下一个将会落入执行的 case 中的匹配条件。fallthrough简单地使代码继续连接到下一个 case 中的代码，这和 C 语言标准中的switch语句特性是一样的。
+注意： fallthrough关键字不会检查它下一个将会落入执行的 case 中的匹配条件。fallthrough简单
+地使代码继续连接到下一个 case 中的代码，这和 C 语言标准中的switch语句特性是一样的。
 ```
 
 ###Continue,Break的标签
@@ -579,9 +588,8 @@ print("min is \(bounds.min) and max is \(bounds.max)")
 
 ###可选元组返回类型
 ```
-注意 可选元组类型如 (Int, Int)? 与元组包含可选类型如 
-(Int?, Int?) 是不同的.可选的元组类型，整个元组是可选
-的，而不只是元组中的每个元素值。
+注意 可选元组类型如 (Int, Int)? 与元组包含可选类型如 (Int?, Int?) 是不同的.可选的元组类
+型，整个元组是可选的，而不只是元组中的每个元素值。
 ```
 
 ###指定参数标签
@@ -781,7 +789,8 @@ serve(customer: customersInLine.remove(at: 0))
 ```
 
 ```
-注意 过度使用 autoclosures 会让你的代码变得难以理解。上下文和函数名应该能够清晰地表明求值是被延迟执行的。
+注意 过度使用 autoclosures 会让你的代码变得难以理解。上下文和函数名应该能够清晰地表明求值是
+被延迟执行的。
 ```
 
 如果你想让一个自动闭包可以“逃逸”，则应该同时使用@autoclosure 和 @escaping 属性。
@@ -820,7 +829,9 @@ directionToHead = .east
 
 ```
 注意
-与 C 和 Objective-C 不同，Swift 的枚举成员在被创建时不会被赋予一个默认的整型值。在上面的CompassPoint例子中，north，south，east和west不会被隐式地赋值为0，1，2和3。相反，这些枚举成员本身就是完备的值，这些值的类型是已经明确定义好的CompassPoint类型。
+与 C 和 Objective-C 不同，Swift 的枚举成员在被创建时不会被赋予一个默认的整型值。在上面的
+CompassPoint例子中，north，south，east和west不会被隐式地赋值为0，1，2和3。相反，这些枚举
+成员本身就是完备的值，这些值的类型是已经明确定义好的CompassPoint类型。
 ```
 当directionToHead的类型已知时，再次为其赋值可以省略枚举类型名。在使用具有显式类型的枚举值时，这种写法让代码具有更好的可读性。
 ###多个值可以出现在同一行
@@ -904,7 +915,9 @@ enum ASCIIControlCharacter: Character {
 }
 
 注意
-原始值和关联值是不同的。原始值是在定义枚举时被预先填充的值，像上述三个 ASCII 码。对于一个特定的枚举成员，它的原始值始终不变。关联值是创建一个基于枚举成员的常量或变量时才设置的值，枚举成员的关联值可以变化。
+原始值和关联值是不同的。原始值是在定义枚举时被预先填充的值，像上述三个 ASCII 码。对于一个特定
+的枚举成员，它的原始值始终不变。关联值是创建一个基于枚举成员的常量或变量时才设置的值，枚举成员
+的关联值可以变化。
 ```
 
 ###原始值的隐式赋值
@@ -1070,9 +1083,11 @@ class DataManager {
 }
 
 注意
-必须将延迟存储属性声明成变量（使用 var 关键字），因为属性的初始值可能在实例构造完成之后才会得到。而常量属性在构造过程完成之前必须要有初始值，因此无法声明成延迟属性。
+必须将延迟存储属性声明成变量（使用 var 关键字），因为属性的初始值可能在实例构造完成之后才会得
+到。而常量属性在构造过程完成之前必须要有初始值，因此无法声明成延迟属性。
 
-如果一个被标记为 lazy 的属性在没有初始化时就同时被多个线程访问，则无法保证该属性只会被初始化一次。
+如果一个被标记为 lazy 的属性在没有初始化时就同时被多个线程访问，则无法保证该属性只会被初始化
+一次。
 ```
 
 ###计算属性
@@ -1152,7 +1167,9 @@ print("the volume of fourByFiveByTwo is \(fourByFiveByTwo.volume)")
 
 ```
 注意
-父类的属性在子类的构造器中被赋值时，它在父类中的 willSet 和 didSet 观察器会被调用，随后才会调用子类的观察器。在父类初始化方法调用之前，子类给属性赋值时，观察器不会被调用。 有关构造器代理的更多信息，请参考值类型的构造器代理和类的构造器代理规则。
+父类的属性在子类的构造器中被赋值时，它在父类中的 willSet 和 didSet 观察器会被调用，随后才会
+调用子类的观察器。在父类初始化方法调用之前，子类给属性赋值时，观察器不会被调用。 有关构造器代
+理的更多信息，请参考值类型的构造器代理和类的构造器代理规则。
 ```
 
 ```
@@ -1183,7 +1200,8 @@ stepCounter.totalSteps = 896
 ```
 注意
 
-如果将属性通过 in-out 方式传入函数，willSet 和 didSet 也会调用。这是因为 in-out 参数采用了拷入拷出模式：即在函数内部使用的是参数的 copy，函数结束后，又对参数重新赋值。
+如果将属性通过 in-out 方式传入函数，willSet 和 didSet 也会调用。这是因为 in-out 参数采用
+了拷入拷出模式：即在函数内部使用的是参数的 copy，函数结束后，又对参数重新赋值。
 ```
 
 ###全局变量和局部变量
@@ -1191,7 +1209,8 @@ stepCounter.totalSteps = 896
 
 ```
 注意
-全局的常量或变量都是延迟计算的，跟延迟存储属性相似，不同的地方在于，全局的常量或变量不需要标记lazy修饰符。
+全局的常量或变量都是延迟计算的，跟延迟存储属性相似，不同的地方在于，全局的常量或变量不需要标记
+lazy修饰符。
 局部范围的常量或变量从不延迟计算。
 ```
 
@@ -1206,8 +1225,10 @@ stepCounter.totalSteps = 896
 
 ```
 注意
-跟实例的存储型属性不同，必须给存储型类型属性指定默认值，因为类型本身没有构造器，也就无法在初始化过程中使用构造器给类型属性赋值。
-存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 lazy 修饰符。
+跟实例的存储型属性不同，必须给存储型类型属性指定默认值，因为类型本身没有构造器，也就无法在初始
+化过程中使用构造器给类型属性赋值。
+存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时
+访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 lazy 修饰符。
 ```
 
 ###类型属性语法
@@ -1247,7 +1268,8 @@ print(SomeClass.computedTypeProperty)
 
 ```
 注意
-例子中的计算型类型属性是只读的，但也可以定义可读可写的计算型类型属性，跟计算型实例属性的语法相同。
+例子中的计算型类型属性是只读的，但也可以定义可读可写的计算型类型属性，跟计算型实例属性的语法相
+同。
 ```
 ```
 struct AudioChannel {
@@ -1270,8 +1292,190 @@ struct AudioChannel {
 
 ```
 注意
-在第一个检查过程中，didSet 属性观察器将 currentLevel 设置成了不同的值，但这不会造成属性观察器被再次调用。
+在第一个检查过程中，didSet 属性观察器将 currentLevel 设置成了不同的值，但这不会造成属性观
+察器被再次调用。
 ```
 
+##方法
+###在实例方法中修改值类型
+结构体和枚举是值类型。默认情况下，值类型的属性不能在它的实例方法中被修改。
+
+但是，如果你确实需要在某个特定的方法中修改结构体或者枚举的属性，你可以为这个方法选择可变(mutating)行为，然后就可以从其方法内部改变它的属性；并且这个方法做的任何改变都会在方法执行结束时写回到原始结构中。方法还可以给它隐含的self属性赋予一个全新的实例，这个新实例在方法结束时会替换现存实例。
+
+```
+struct Point {
+    var x = 0.0, y = 0.0
+    mutating func moveByX(deltaX: Double, y deltaY: Double) {
+        x += deltaX
+        y += deltaY
+    }
+}
+var somePoint = Point(x: 1.0, y: 1.0)
+somePoint.moveByX(2.0, y: 3.0)
+print("The point is now at (\(somePoint.x), \(somePoint.y))")
+// 打印 "The point is now at (3.0, 4.0)"
+
+struct Point {
+    var x = 0.0, y = 0.0
+    mutating func moveBy(x deltaX: Double, y deltaY: Double) {
+        self = Point(x: x + deltaX, y: y + deltaY)
+    }
+}
+
+
+enum TriStateSwitch {
+    case Off, Low, High
+    mutating func next() {
+        switch self {
+        case .Off:
+            self = .Low
+        case .Low:
+            self = .High
+        case .High:
+            self = .Off
+        }
+    }
+}
+var ovenLight = TriStateSwitch.Low
+ovenLight.next()
+// ovenLight 现在等于 .High
+ovenLight.next()
+// ovenLight 现在等于 .Off
+```
+
+###类方法
+实例方法是被某个类型的实例调用的方法。你也可以定义在类型本身上调用的方法，这种方法就叫做类型方法。在方法的func关键字之前加上关键字static，来指定类型方法。类还可以用关键字class来允许子类重写父类的方法实现。
+
+```
+注意
+在 Objective-C 中，你只能为 Objective-C 的类类型（classes）定义类型方法（type-level
+methods）。在 Swift 中，你可以为所有的类、结构体和枚举定义类型方法。每一个类型方法都被它所
+支持的类型显式包含。
+```
+
+```
+class SomeClass {
+    class func someTypeMethod() {
+        // 在这里实现类型方法
+    }
+}
+SomeClass.someTypeMethod()
+```
+
+##下标
+###定义下标属性
+与定义实例方法类似，定义下标使用subscript关键字，指定一个或多个输入参数和返回类型；与实例方法不同的是，下标可以设定为读写或只读。
+
+```
+subscript(index: Int) -> Int {
+    get {
+      // 返回一个适当的 Int 类型的值
+    }
+
+    set(newValue) {
+      // 执行适当的赋值操作
+    }
+}
+```
+
+###下标选项
+下标可以接受任意数量的入参，并且这些入参可以是任意类型。下标的返回值也可以是任意类型。下标可以使用变量参数和可变参数，但不能使用输入输出参数，也不能给参数设置默认值。
+一个类或结构体可以根据自身需要提供多个下标实现，使用下标时将通过入参的数量和类型进行区分，自动匹配合适的下标，这就是下标的重载。  
+重写indexIsValidForRow方法可以判断下标是否合法。
+
+```
+struct Matrix {
+    let rows: Int, columns: Int
+    var grid: [Double]
+    init(rows: Int, columns: Int) {
+        self.rows = rows
+        self.columns = columns
+        grid = Array(count: rows * columns, repeatedValue: 0.0)
+    }
+    func indexIsValidForRow(row: Int, column: Int) -> Bool {
+        return row >= 0 && row < rows && column >= 0 && column < columns
+    }
+    subscript(row: Int, column: Int) -> Double {
+        get {
+            assert(indexIsValidForRow(row, column: column), "Index out of range")
+            return grid[(row * columns) + column]
+        }
+        set {
+            assert(indexIsValidForRow(row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
+        }
+    }
+}
+```
+
+##继承
+###继承语法
+```
+class Bicycle: Vehicle {
+    var hasBasket = false
+}
+```
+
+###重写
+子类可以为继承来的实例方法，类方法，实例属性，或下标提供自己定制的实现。我们把这种行为叫重写。
+
+如果要重写某个特性，你需要在重写定义的前面加上override关键字。这么做，你就表明了你是想提供一个重写版本，而非错误地提供了一个相同的定义。意外的重写行为可能会导致不可预知的错误，任何缺少override关键字的重写都会在编译时被诊断为错误。
+
+###super
+在合适的地方，你可以通过使用super前缀来访问超类版本的方法，属性或下标：
+
+- 在方法someMethod()的重写实现中，可以通过super.someMethod()来调用超类版本的someMethod()方法。
+- 在属性someProperty的 getter 或 setter 的重写实现中，可以通过super.someProperty来访问超类版本的someProperty属性。
+- 在下标的重写实现中，可以通过super[someIndex]来访问超类版本中的相同下标。
+
+###重写属性
+你可以重写继承来的实例属性或类型属性，提供自己定制的 getter 和 setter，或添加属性观察器使重写的属性可以观察属性值什么时候发生改变。
+
+你在重写一个属性时，必需将它的名字和类型都写出来。这样才能使编译器去检查你重写的属性是与超类中同名同类型的属性相匹配的。
+
+你可以将一个继承来的只读属性重写为一个读写属性，只需要在重写版本的属性里提供 getter 和 setter 即可。但是，你不可以将一个继承来的读写属性重写为一个只读属性。
+
+```
+class Car: Vehicle {
+    var gear = 1
+    override var description: String {
+        return super.description + " in gear \(gear)"
+    }
+}
+```
+
+``
+注意
+如果你在重写属性中提供了 setter，那么你也一定要提供 getter。如果你不想在重写版本中
+的 getter 里修改继承来的属性值，你可以直接通过super.someProperty来返回继承来的值，
+其中someProperty是你要重写的属性的名字。
+```
+
+你可以通过重写属性为一个继承来的属性添加属性观察器。
+
+```
+注意
+你不可以为继承来的常量存储型属性或继承来的只读计算型属性添加属性观察器。这些属性的值是不可以被设
+置的，所以，为它们提供willSet或didSet实现是不恰当。
+此外还要注意，你不可以同时提供重写的 setter 和重写的属性观察器。如果你想观察属性值的变化，并且
+你已经为那个属性提供了定制的 setter，那么你在 setter 中就可以观察到任何值变化了。
+```
+
+```
+class AutomaticCar: Car {
+    override var currentSpeed: Double {
+        didSet {
+            gear = Int(currentSpeed / 10.0) + 1
+        }
+    }
+}
+```
+
+###防止重写
+你可以通过把方法，属性或下标标记为final来防止它们被重写，只需要在声明关键字前加上final修饰符即可（例如：final var，final func，final class func，以及final subscript）。
+
+如果你重写了带有final标记的方法，属性或下标，在编译时会报错。
+
+你可以通过在关键字class前添加final修饰符（final class）来将整个类标记为 final 的。这样的类是不可被继承的，试图继承这样的类会导致编译报错。
 
 
