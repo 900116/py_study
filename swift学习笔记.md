@@ -2666,5 +2666,456 @@ extension Collection where Iterator.Element: TextRepresentable {
 
 ```
 注意
-如果多个协议扩展都为同一个协议要求提供了默认实现，而遵循协议的类型又同时满足这些协议扩展的限制条件，那么将会使用限制条件最多的那个协议扩展提供的默认实现。
+如果多个协议扩展都为同一个协议要求提供了默认实现，而遵循协议的类型又同时满足这些协议扩展的限制条
+件，那么将会使用限制条件最多的那个协议扩展提供的默认实现。
+```
+
+## 泛型
+```
+func swapTwoInts(_ a: inout Int, _ b: inout Int) {
+    let temporaryA = a
+    a = b
+    b = temporaryA
+}
+```
+
+```
+注意
+在上面三个函数中，a 和 b 类型相同。如果 a 和 b 类型不同，那它们俩就不能互换值。Swift 是类型安
+全的语言，所以它不允许一个 String 类型的变量和一个 Double 类型的变量互换值。试图这样做将导致
+编译错误。
+```
+
+### 泛型语法
+
+```
+func swapTwoValues<T>(_ a: inout T, _ b: inout T) {
+    let temporaryA = a
+    a = b
+    b = temporaryA
+}
+
+var someInt = 3
+var anotherInt = 107
+swapTwoValues(&someInt, &anotherInt)
+// someInt 现在 107, and anotherInt 现在 3
+
+var someString = "hello"
+var anotherString = "world"
+swapTwoValues(&someString, &anotherString)
+// someString 现在 "world", and anotherString 现在 "hello"
+```
+
+```
+注意
+请始终使用大写字母开头的驼峰命名法（例如 T 和 MyTypeParameter）来为类型参数命名，以表明它们是
+占位类型，而不是一个值。
+```
+
+### 泛型类型
+
+```
+struct Stack<Element> {
+    var items = [Element]()
+    mutating func push(_ item: Element) {
+        items.append(item)
+    }
+    mutating func pop() -> Element {
+        return items.removeLast()
+    }
+}
+```
+
+### 扩展一个泛型类型
+当你扩展一个泛型类型的时候，你并不需要在扩展的定义中提供类型参数列表。
+```
+extension Stack {
+    var topItem: Element? {
+        return items.isEmpty ? nil : items[items.count - 1]
+    }
+}
+```
+
+### 类型约束语法
+```
+func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
+    // 这里是泛型函数的函数体部分
+}
+```
+
+不是所有的 Swift 类型都可以用等式符（==）进行比较。比如说，如果你创建一个自定义的类或结构体来表示一个复杂的数据模型，那么 Swift 无法猜到对于这个类或结构体而言“相等”意味着什么。正因如此，这部分代码无法保证适用于每个可能的类型 T，当你试图编译这部分代码时会出现相应的错误。
+
+Swift 标准库中定义了一个 Equatable 协议，该协议要求任何遵循该协议的类型必须实现等式符（==）及不等符(!=)，从而能对该类型的任意两个值进行比较。所有的 Swift 标准类型自动支持 Equatable 协议。
+
+任何 Equatable 类型都可以安全地使用在 findIndex(of:in:) 函数中，因为其保证支持等式操作符。
+
+
+```
+func findIndex<T: Equatable>(of valueToFind: T, in array:[T]) -> Int? {
+    for (index, value) in array.enumerated() {
+        if value == valueToFind {
+            return index
+        }
+    }
+    return nil
+}
+```
+
+### 关联类型
+定义一个协议时，有的时候声明一个或多个关联类型作为协议定义的一部分将会非常有用。关联类型为协议中的某个类型提供了一个占位名（或者说别名），其代表的实际类型在协议被采纳时才会被指定。你可以通过 associatedtype 关键字来指定关联类型。
+
+```
+protocol Container {
+    associatedtype ItemType
+    mutating func append(_ item: ItemType)
+    var count: Int { get }
+    subscript(i: Int) -> ItemType { get }
+}
+```
+
+### 通过扩展一个存在的类型来指定关联类型
+```
+extension Array: Container {}
+```
+
+### 泛型 Where 语句
+你可以通过将 where 关键字紧跟在类型参数列表后面来定义 where 子句，where 子句后跟一个或者多个针对关联类型的约束，以及一个或多个类型参数和关联类型间的相等关系。你可以在函数体或者类型的大括号之前添加 where 子句。
+
+```
+func allItemsMatch<C1: Container, C2: Container>
+    (_ someContainer: C1, _ anotherContainer: C2) -> Bool
+    where C1.ItemType == C2.ItemType, C1.ItemType: Equatable {
+
+        // 检查两个容器含有相同数量的元素
+        if someContainer.count != anotherContainer.count {
+            return false
+        }
+
+        // 检查每一对元素是否相等
+        for i in 0..<someContainer.count {
+            if someContainer[i] != anotherContainer[i] {
+                return false
+            }
+        }
+
+        // 所有元素都匹配，返回 true
+        return true
+}
+```
+
+### 具有泛型 where 子句的扩展
+
+```
+extension Stack where Element: Equatable {
+    func isTop(_ item: Element) -> Bool {
+        guard let topItem = items.last else {
+            return false
+        }
+        return topItem == item
+    }
+}
+```
+
+## 访问控制
+### 模块和源文件
+模块指的是独立的代码单元，框架或应用程序会作为一个独立的模块来构建和发布。在 Swift 中，一个模块可以使用 import 关键字导入另外一个模块。
+
+### 访问级别
+- `open`和`public`可以访问同一模块源文件中的任何实体，在模块外也可以通过导入该模块来访问源文件里的所有实体。
+- `internal`可以访问同一模块源文件中的任何实体，但是不能从模块外访问该模块源文件中的实体。
+- `fileprivate`访只能被所定义的文件内部访问。
+- `private`只能在所定义的作用域内使用。
+
+`open`为最高访问级别，`private`为最低访问级别。  
+
+`open` > `public` > `internal` > `fileprivate` >  `private`  
+
+`open`只作用于类类型和类的成员，它和`public`的区别如下：
+
+- > `public` 的类，只能在它们定义的模块内部被继承。
+- > `public` 的类成员，只能在它们定义的模块内部的子类中重写。
+- `open`的类，可以在它们定义的模块中被继承，也可以在引用它们的模块中被继承。
+- `open`的类成员，可以在它们定义的模块中子类中重写，也可以在引用它们的模块中的子类重写。
+- 把一个类标记为`open`，显式地表明，你认为其他模块中的代码使用此类作为父类，然后你已经设计好了你的类的代码了。
+
+### 访问级别基本原则
+- `public`的变量，其类型的访问级别不能是`internal`，`fileprivate`或是`private`的。因为无法保证变量的类型在使用变量的地方也具有访问权限。
+- 函数的访问级别不能高于它的参数类型和返回类型的访问级别。因为这样就会出现函数可以在任何地方被访问，但是它的参数类型和返回类型却不可以的情况。
+
+### 默认访问级别
+默认为 `internal` 级别。
+
+### 框架的访问级别
+当你开发框架时，就需要把一些对外的接口定义为开放访问或公开访问级别，以便使用者导入该框架后可以正常使用其功能。这些被你定义为对外的接口，就是这个框架的 API。
+
+```
+注意
+框架依然会使用默认的`internal`级别，也可以指定为`fileprivate`或者`private`级别。当你想把某个实体作为
+框架的 API 的时候，需显式为其指定`open`或`public`级别。
+```
+
+### 自定义类型
+如果你将类型指定为`fileprivate`或者`private`级别，那么该类的成员的默认级别也会变成`fileprivate`或者`private`级别。如果你将类指定为`public`或者`internal`，那么该类所有成员的默认级别将是`internal`。
+
+
+### 元组类型
+元组的访问级别将由元组中访问级别最严格的类型来决定
+
+```
+注意   
+元组的访问级别是在它被使用时自动推断出的，而无法明确指定。
+```
+
+### 函数类型
+函数的访问级别根据访问级别最严格的参数类型或返回类型的访问级别来决定。
+
+### 枚举类型
+枚举成员的访问级别和该枚举类型相同，你不能为枚举成员单独指定不同的访问级别。
+枚举定义中的任何原始值或关联值的类型的访问级别至少不能低于枚举类型的访问级别。
+
+### 嵌套类型
+如果在 `private` 级别的类型中定义嵌套类型，那么该嵌套类型就自动拥有 `private` 访问级别。如果在 `public` 或者 `internal` 级别的类型中定义嵌套类型，那么该嵌套类型自动拥有 `internal` 访问级别。如果想让嵌套类型拥有 `public` 访问级别，那么需要明确指定该嵌套类型的访问级别。
+
+### 子类
+子类的访问级别不得高于父类的访问级别。例如，父类的访问级别是 `internal`，子类的访问级别就不能是 `public`。
+
+### 常量、变量、属性、下标
+常量、变量、属性不能拥有比它们的类型更高的访问级别。例如，你不能定义一个 `public` 级别的属性，但是它的类型却是 `private` 级别的。
+
+### Getter 和 Setter
+常量、变量、属性、下标的 Getters 和 Setters 的访问级别和它们所属类型的访问级别相同。
+
+```
+注意
+这个规则同时适用于存储型属性和计算型属性。即使你不明确指定存储型属性的 Getter 和 Setter，
+Swift 也会隐式地为其创建 Getter 和 Setter，用于访问该属性的后备存储。使用 
+fileprivate(set)，private(set) 和 internal(set) 可以改变 Setter 的访问级别，这对计算型
+属性也同样适用。
+```
+
+### 构造器
+自定义构造器的访问级别可以低于或等于其所属类型的访问级别。唯一的例外是必要构造器，它的访问级别必须和所属类型的访问级别相同。
+
+如同函数或方法的参数，构造器参数的访问级别也不能低于构造器本身的访问级别。
+
+### 默认构造器
+如默认构造器所述，Swift 会为结构体和类提供一个默认的无参数的构造器，只要它们为所有存储型属性设置了默认初始值，并且未提供自定义的构造器。
+
+默认构造器的访问级别与所属类型的访问级别相同，除非类型的访问级别是 public。如果一个类型被指定为 public 级别，那么默认构造器的访问级别将为 internal。如果你希望一个 public 级别的类型也能在其他模块中使用这种无参数的默认构造器，你只能自己提供一个 public 访问级别的无参数构造器。
+
+### 结构体默认的成员逐一构造器
+如果结构体中任意存储型属性的访问级别为 private，那么该结构体默认的成员逐一构造器的访问级别就是 private。否则，这种构造器的访问级别依然是 internal。
+
+如同前面提到的默认构造器，如果你希望一个 public 级别的结构体也能在其他模块中使用其默认的成员逐一构造器，你依然只能自己提供一个 public 访问级别的成员逐一构造器。
+
+### 协议
+协议中的每一个要求都具有和该协议相同的访问级别。你不能将协议中的要求设置为其他访问级别。这样才能确保该协议的所有要求对于任意采纳者都将可用。
+
+```
+注意
+如果你定义了一个 public 访问级别的协议，那么该协议的所有实现也会是 public 访问级别。这一点不
+同于其他类型，例如，当类型是 public 访问级别时，其成员的访问级别却只是 internal。
+```
+
+### 协议继承
+如果定义了一个继承自其他协议的新协议，那么新协议拥有的访问级别最高也只能和被继承协议的访问级别相同。例如，你不能将继承自 `internal` 协议的新协议定义为 `public` 协议。
+
+### 协议一致性
+一个类型可以采纳比自身访问级别低的协议。例如，你可以定义一个 public 级别的类型，它可以在其他模块中使用，同时它也可以采纳一个 internal 级别的协议，但是只能在该协议所在的模块中作为符合该协议的类型使用。
+
+采纳了协议的类型的访问级别取它本身和所采纳协议两者间最低的访问级别。也就是说如果一个类型是 public 级别，采纳的协议是 internal 级别，那么采纳了这个协议后，该类型作为符合协议的类型时，其访问级别也是 internal。
+
+如果你采纳了协议，那么实现了协议的所有要求后，你必须确保这些实现的访问级别不能低于协议的访问级别。例如，一个 public 级别的类型，采纳了 internal 级别的协议，那么协议的实现至少也得是 internal 级别。
+
+```
+注意
+Swift 和 Objective-C 一样，协议的一致性是全局的，也就是说，在同一程序中，一个类型不可能用两种
+不同的方式实现同一个协议。
+```
+
+### 扩展
+你可以在访问级别允许的情况下对类、结构体、枚举进行扩展。扩展成员具有和原始类型成员一致的访问级别。例如，你扩展了一个 public 或者 internal 类型，扩展中的成员具有默认的 internal 访问级别，和原始类型中的成员一致 。如果你扩展了一个 private 类型，扩展成员则拥有默认的 private 访问级别。
+
+或者，你可以明确指定扩展的访问级别（例如，private extension），从而给该扩展中的所有成员指定一个新的默认访问级别。这个新的默认访问级别仍然可以被单独指定的访问级别所覆盖。
+
+### 通过扩展添加协议一致性
+
+如果你通过扩展来采纳协议，那么你就不能显式指定该扩展的访问级别了。协议拥有相应的访问级别，并会为该扩展中所有协议要求的实现提供默认的访问级别。
+
+### 泛型
+泛型类型或泛型函数的访问级别取决于泛型类型或泛型函数本身的访问级别，还需结合类型参数的类型约束的访问级别，根据这些访问级别中的最低访问级别来确定。
+
+### 类型别名
+你定义的任何类型别名都会被当作不同的类型，以便于进行访问控制。类型别名的访问级别不可高于其表示的类型的访问级别。例如，private 级别的类型别名可以作为 `private`，`file-private`，`internal`，`public`或者`open`类型的别名，但是 `public` 级别的类型别名只能作为 `public` 类型的别名，不能作为 `internal`，`file-private`，或 `private` 类型的别名。
+
+```
+注意
+这条规则也适用于为满足协议一致性而将类型别名用于关联类型的情况。
+```
+
+## 高级运算符
+### 取反`~`
+```
+let initialBits: UInt8 = 0b00001111
+let invertedBits = ~initialBits // 等于 0b11110000
+```
+
+### 与运算`&`
+```
+let firstSixBits: UInt8 = 0b11111100
+let lastSixBits: UInt8  = 0b00111111
+let middleFourBits = firstSixBits & lastSixBits // 等于 00111100
+```
+
+### 或运算`|`
+```
+let someBits: UInt8 = 0b10110010
+let moreBits: UInt8 = 0b01011110
+let combinedbits = someBits | moreBits // 等于 11111110
+```
+
+### 异或运算`^`
+```
+let firstBits: UInt8 = 0b00010100
+let otherBits: UInt8 = 0b00000101
+let outputBits = firstBits ^ otherBits // 等于 00010001
+```
+
+### 左移`<<`和右移`>>`
+对无符号整数进行移位的规则如下：
+
+- 已经存在的位按指定的位数进行左移和右移。
+- 任何因移动而超出整型存储范围的位都会被丢弃。
+- 用 0 来填充移位后产生的空白位。
+
+```
+let shiftBits: UInt8 = 4 // 即二进制的 00000100
+shiftBits << 1           // 00001000
+shiftBits << 2           // 00010000
+shiftBits << 5           // 10000000
+shiftBits << 6           // 00000000
+shiftBits >> 2           // 00000001
+```
+
+### 溢出运算符
+在默认情况下，当向一个整数赋予超过它容量的值时，Swift 默认会报错，而不是生成一个无效的数。这个行为为我们在运算过大或着过小的数的时候提供了额外的安全性。
+
+然而，也可以选择让系统在数值溢出的时候采取截断处理，而非报错。
+
+- 溢出加法 `&+`
+- 溢出减法 `&-`
+- 溢出乘法 `&*`
+
+### 数值溢出
+```
+var unsignedOverflow = UInt8.max
+// unsignedOverflow 等于 UInt8 所能容纳的最大整数 255
+unsignedOverflow = unsignedOverflow &+ 1
+// 此时 unsignedOverflow 等于 0
+
+var unsignedOverflow = UInt8.min
+// unsignedOverflow 等于 UInt8 所能容纳的最小整数 0
+unsignedOverflow = unsignedOverflow &- 1
+// 此时 unsignedOverflow 等于 255
+```
+
+### 优先级和结合性
+```
+注意
+相对 C 语言和 Objective-C 来说，Swift 的运算符优先级和结合性规则更加简洁和可预测。但是，这也
+意味着它们相较于 C 语言及其衍生语言并不是完全一致的。在对现有的代码进行移植的时候，要注意确保运
+算符的行为仍然符合你的预期。
+```
+
+### 运算符重载
+```
+struct Vector2D {
+    var x = 0.0, y = 0.0
+}
+
+extension Vector2D {
+    static func + (left: Vector2D, right: Vector2D) -> Vector2D {
+        return Vector2D(x: left.x + right.x, y: left.y + right.y)
+    }
+}
+```
+
+### 前缀和后缀运算符
+当运算符出现在值之前时，它就是前缀的（例如 -a），而当它出现在值之后时，它就是后缀的（例如 b!）。
+
+要实现前缀或者后缀运算符，需要在声明运算符函数的时候在 func 关键字之前指定 prefix 或者 postfix 修饰符：
+
+```
+extension Vector2D {
+    static prefix func - (vector: Vector2D) -> Vector2D {
+        return Vector2D(x: -vector.x, y: -vector.y)
+    }
+}
+```
+
+### 复合赋值运算符
+```
+extension Vector2D {
+    static func += (left: inout Vector2D, right: Vector2D) {
+        left = left + right
+    }
+}
+```
+
+```
+注意
+不能对默认的赋值运算符（=）进行重载。只有组合赋值运算符可以被重载。同样地，也无法对三目条件运算
+符 （a ? b : c） 进行重载。
+```
+
+### 等价运算符
+```
+extension Vector2D {
+    static func == (left: Vector2D, right: Vector2D) -> Bool {
+        return (left.x == right.x) && (left.y == right.y)
+    }
+    static func != (left: Vector2D, right: Vector2D) -> Bool {
+        return !(left == right)
+    }
+}
+```
+
+### 自定义运算符
+新的运算符要使用 operator 关键字在全局作用域内进行定义，同时还要指定 prefix、infix 或者 postfix 修饰符：
+
+`prefix operator +++`
+
+```
+extension Vector2D {
+    static prefix func +++ (vector: inout Vector2D) -> Vector2D {
+        vector += vector
+        return vector
+    }
+}
+```
+
+### 自定义中缀运算符的优先级
+每个自定义中缀运算符都属于某个优先级组。  
+而没有明确放入优先级组的自定义中缀运算符会放到一个默认的优先级组内，其优先级高于三元运算符。
+
+此运算符属于 `AdditionPrecedence` 优先组：
+
+```
+infix operator +-: AdditionPrecedence
+extension Vector2D {
+    static func +- (left: Vector2D, right: Vector2D) -> Vector2D {
+        return Vector2D(x: left.x + right.x, y: left.y - right.y)
+    }
+}
+let firstVector = Vector2D(x: 1.0, y: 2.0)
+let secondVector = Vector2D(x: 3.0, y: 4.0)
+let plusMinusVector = firstVector +- secondVector
+// plusMinusVector 是一个 Vector2D 实例，并且它的值为 (4.0, -2.0)
+```
+  
+
+```
+注意
+当定义前缀与后缀运算符的时候，我们并没有指定优先级。然而，如果对同一个值同时使用前缀与后缀运算
+符，则后缀运算符会先参与运算。
 ```
