@@ -169,7 +169,6 @@ for i in 1..<5 :
 
 ## 字符与字符串
 ### 字符串常量
-字符串常量，必须有加@
 
 ```
 let someStr = "abcdef"
@@ -233,35 +232,20 @@ print("unusualMenagerie has \(unusualMenagerie.characters.count) characters")
 
 ```
 注意：
-可扩展的字符群集可以组成一个或者多个 Unicode 标量。这意味着不同的字符以及相同字符的不同表示方
-式可能需要不同数量的内存空间来存储。所以 Swift 中的字符在一个字符串中并不一定占用相同的内存空
-间数量。因此在没有获取字符串的可扩展的字符群的范围时候，就不能计算出字符串的字符数量。如果您正
-在处理一个长字符串，需要注意characters属性必须遍历全部的 Unicode 标量，来确定字符串的字符数
-量。
+Swift 中的字符在一个字符串中并不一定占用相同的内存空间数量。如果您正在处理一个长字符串，需要注意characters属性必须遍历全部的 Unicode 标量，来确定字符串的字符数量。
 
-另外需要注意的是通过characters属性返回的字符数量并不总是与包含相同字符的NSString的length属
-性相同。NSString的length属性是利用 UTF-16 表示的十六位代码单元数字，而不是 Unicode 可扩
-展的字符群集。
+characters.count并不总是等于NSString.length。NSString的length属性是利用 UTF-16 表示的十六位代码单元数字，而不是 Unicode 可扩展的字符群集。
 ```
 
 ### 字符串比较
-字符串/字符可以用等于操作符(==)和不等于操作符(!=)
+字符串/字符可以用等于操作符(==)和不等于操作符(!=)表示值是否相等
 
 ```
-let quotation = "We're a lot alike, you and I."
-let sameQuotation = "We're a lot alike, you and I."
-if quotation == sameQuotation {
-    print("These two strings are considered equal")
-}
-// 打印输出 "These two strings are considered equal"
-
 注意：
 在 Swift 中，字符串和字符并不区分地域。
 ```
 
 ### UTF-8表示
-您可以通过遍历String的utf8属性来访问它的UTF-8表示。 其为String.UTF8View类型的属性，UTF8View是无符号8位 (UInt8) 值的集合
-
 ```
 for codeUnit in dogString.utf8 {
     print("\(codeUnit) ", terminator: "")
@@ -271,25 +255,18 @@ print("")
 ```
 
 ### UTF-16表示
-同上
+`dogString.utf16`
 
 ### Unicode 标量表示
 您可以通过遍历String值的unicodeScalars属性来访问它的 Unicode 标量表示。 其为UnicodeScalarView类型的属性，UnicodeScalarView是UnicodeScalar类型的值的集合。
-
-```
-for scalar in dogString.unicodeScalars {
-    print("\(scalar.value) ", terminator: "")
-}
-print("")
-// 68 111 103 8252 128054
-```
+`dogString. unicodeScalars `
 
 ## 集合框架
 ### 三种集合类型
 Swift 语言提供`Arrays`、`Sets`和`Dictionaries`三种基本的集合类型用来存储集合数据。
 
 ### 集合可变性
-通过let和var区分是否可变
+通过`let`和`var`区分是否可变
 
 ### 创建一个空数组
 `var someInts = [Int]()`
@@ -298,7 +275,7 @@ Swift 语言提供`Arrays`、`Sets`和`Dictionaries`三种基本的集合类型�
 `var threeDoubles = Array(repeating: 0.0, count: 3)`
 
 ### 数组支持+和+=运算符
-数组之间可以用+和+=方法
+数组之间可以用`+`和`+=`方法
 
 ```
 var arr_x = [1,2,3]
@@ -306,7 +283,7 @@ arr_x += [4,5]
 ```
 
 ### 判断数组为空
-isEmpty可以判断数组是否为空，其等价于count==0
+`isEmpty`可以判断数组是否为空，其等价于`count==0`
 
 ### 可以用区间批量改变数组的值
 ```
@@ -330,15 +307,16 @@ var favoriteGenres: Set<String> = ["Rock", "Classical", "Hip hop"]
 ```
 
 ### 集合操作
-- 使用intersection(_:)方法根据两个集合中都包含的值创建的一个新的集合。
-- 使用symmetricDifference(_:)方法根据在一个集合中但不在两个集合中的值创建一个新的集合。
-- 使用union(_:)方法根据两个集合的值创建一个新的集合。
-- 使用subtracting(_:)方法根据不在该集合中的值创建一个新的集合。
-- 使用“是否相等”运算符(==)来判断两个集合是否包含全部相同的值。
-- 使用isSubset(of:)方法来判断一个集合中的值是否也被包含在另外一个集合中。
-- 使用isSuperset(of:)方法来判断一个集合中包含另一个集合中所有的值。
-- 使用isStrictSubset(of:)或者isStrictSuperset(of:)方法来判断一个集合是否是另外一个集合的子集合或者父集合并且两个集合并不相等。
-- 使用isDisjoint(with:)方法来判断两个集合是否不含有相同的值(是否没有交集)。
+- `intersection(_:)`取交集。
+- `symmetricDifference(_:)`取不同。
+- `union(_:)`取并集。
+- `subtracting(_:)`取差集。
+- `==`相等。
+- `isSubset(of:)`是否是子集(包含相等情况)。
+- `isSuperset(of:)`是否是父集(包含相等情况)。
+- `isStrictSubset(of:)`是否是子集(不包含相等情况)。
+- `isStrictSuperset(of:)`是否是父集(不包含相等情况)。
+- `isDisjoint(with:)`是否没有交集。
 
 ### 创建一个空字典
 `var namesOfIntegers = [Int: String]()`
@@ -357,7 +335,7 @@ for (airportCode, airportName) in airports {
 
 ## 控制流
 ### 使用匿名变量遍历
-当你不需要知道下表的时候，你可以使用如下代码
+当你不需要知道下标的时候，你可以使用如下代码
 
 ```
 var answer = 1
@@ -381,114 +359,90 @@ for i in stride(from: 0, through: 10, by: 2) {
 }
 ```
 ### Repeat-While循环
-Swift语言的repeat-while循环和其他语言中的do-while循环是类似的。
+Swift语言的`repeat-while`循环和其他语言中的`do-while`循环是类似的。
 
-### 支持区间的Switch
+### 支持区间和组合的Switch
 ```
-let approximateCount = 62
-var naturalCount: String
-switch approximateCount {
-case 0:
-    naturalCount = "no"
-case 1..<5:
-    naturalCount = "a few"
-case 5..<12:
-    naturalCount = "several"
-case 12..<100:
-    naturalCount = "dozens of"
-case 100..<1000:
-    naturalCount = "hundreds of"
+let x = 3
+switch x {
+case 0...4:
+    print("hello")
+case 5,6,7:
+    print("hey")
 default:
-    naturalCount = "many"
+    print("what")
 }
 ```
 ### Switch中的元组
 我们可以使用元组在同一个switch语句中测试多个值。元组中的元素可以是值，也可以是区间。另外，使用下划线（_）来匹配所有可能的值。
 
 ```
-let somePoint = (1, 1)
-switch somePoint {
-case (0, 0):
-    print("(0, 0) is at the origin")
-case (_, 0):
-    print("(\(somePoint.0), 0) is on the x-axis")
-case (0, _):
-    print("(0, \(somePoint.1)) is on the y-axis")
-case (-2...2, -2...2):
-    print("(\(somePoint.0), \(somePoint.1)) is inside the box")
+let tup = (3,10)
+switch tup {
+case (0,0):
+    print("must be (0,0)")
+case (_,0):
+    print("such as (1,0),(2,0),(3,0)")
+case (3,_):
+    print("such as (3,10),(3,2)")
+case (5...7,2...8):
+    print("such as (5,2),(6,8),(7,3)")
 default:
-    print("(\(somePoint.0), \(somePoint.1)) is outside of the box")
+    print("what")
 }
 ```
 
-### Switch值绑定
+### Switch值绑定与where
 ```
-let anotherPoint = (2, 0)
-switch anotherPoint {
-case (let x, 0):
-    print("on the x-axis with an x value of \(x)")
-case (0, let y):
-    print("on the y-axis with a y value of \(y)")
-case let (x, y):
-    print("somewhere else at (\(x), \(y))")
-}
-// 输出 "on the x-axis with an x value of 2"
-```
-### Switch中可以加入Where
-```
-let yetAnotherPoint = (1, -1)
-switch yetAnotherPoint {
-case let (x, y) where x == y:
-    print("(\(x), \(y)) is on the line x == y")
-case let (x, y) where x == -y:
-    print("(\(x), \(y)) is on the line x == -y")
-case let (x, y):
-    print("(\(x), \(y)) is just some arbitrary point")
-}
-```
-
-### Switch组合匹配
-```
-let someCharacter: Character = "e"
-switch someCharacter {
-case "a", "e", "i", "o", "u":
-    print("\(someCharacter) is a vowel")
-case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m","n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":
-    print("\(someCharacter) is a consonant")
+let lettup = (1,-1)
+switch tup {
+case let (x,y) where x == y:
+    print("such as (1,1),(2,2)")
+case let (x,_) where x > 0:
+    print("such as (1,-1),(2,-8)")
 default:
-    print("\(someCharacter) is not a vowel or a consonant")
+    print("other")
 }
 ```
 
 ### Switch,For,Continue
 ```
-let puzzleInput = "great minds think alike"
-var puzzleOutput = ""
-for character in puzzleInput.characters {
-    switch character {
-    case "a", "e", "i", "o", "u", " ":
+let arr_ = [3,4,5,6,7]
+for x in arr_ {
+    switch x {
+    case 5,7:
         continue
     default:
-        puzzleOutput.append(character)
+        print(x)
     }
 }
-print(puzzleOutput)
 ```
 
 ### Switch贯穿
-C语言中，你必须显示的调用break，才能跳过其他的分支，而Swift刚好与之相反，只要匹配到了一个分支，switch就结束了，你可以通过在分支下面加入fallthrough来实现C语言的switch
+C语言中，你必须显示的调用`break`，才能跳过其他的分支，而Swift刚好与之相反，只要匹配到了一个分支，`switch`就结束了，你可以通过在分支下面加入`fallthrough`来实现C语言的`switch`
 
 ```
-let integerToDescribe = 5
-var description = "The number \(integerToDescribe) is"
-switch integerToDescribe {
-case 2, 3, 5, 7, 11, 13, 17, 19:
-    description += " a prime number, and also"
+var result = 0.0
+let intval = 66
+switch intval {
+case 91...100:
+     result += Double(intval-90) * 1
+     fallthrough
+case 81...90:
+    result += Double(intval-80) * 0.8
+    fallthrough
+case 71...80:
+    result += Double(intval-70) * 0.6
+    fallthrough
+case 61...70:
+    result += Double(intval-60) * 0.4
+    fallthrough
+case 0...60:
+    result += Double(intval) * 0.2
     fallthrough
 default:
-    description += " an integer."
+     result += Double(intval) * 0.4
 }
-print(description)
 ```
 
 ```
@@ -497,93 +451,72 @@ print(description)
 ```
 
 ### Continue,Break的标签
-当你有多层嵌套循环的时候，你可以用continue/break label来实现跳过指定的循环层
+当你有多层嵌套循环的时候，你可以用`continue/break label`来实现跳过指定的循环层
 
 ```
-gameLoop: while square != finalSquare {
-    diceRoll += 1
-    if diceRoll == 7 { diceRoll = 1 }
-    switch square + diceRoll {
-    case finalSquare:
-        // 骰子数刚好使玩家移动到最终的方格里，游戏结束。
-        break gameLoop
-    case let newSquare where newSquare > finalSquare:
-        // 骰子数将会使玩家的移动超出最后的方格，那么这种移动是不合法的，玩家需要重新掷骰子
-        continue gameLoop
-    default:
-        // 合法移动，做正常的处理
-        square += diceRoll
-        square += board[square]
+var counts = 0
+externLoop : for i in 0...5 {
+    for j in 0...6 {
+        counts += 1
+        if j == 1 && i < 3{
+            continue externLoop
+        }
+        if j == 3 {
+            break externLoop
+        }
     }
 }
-print("Game over!")
+//0,0   0,1   1,0   1,1   2,0  2,1   3,0  3,1   3,2   3,3
+print(counts)  //count为10
 ```
 ### guard
-像if语句一样，guard的执行取决于一个表达式的布尔值。我们可以使用guard语句来要求条件必须为真时，以执行guard语句后的代码。不同于if语句，一个guard语句总是有一个else从句，如果条件不为真则执行else从句中的代码。(用于对允许值的过滤，往往不允许的值的条件，会让
-代码可读性变差，也有可能写漏)
+不同于if语句，一个guard语句总是有一个else从句，如果条件不为真则执行else从句中的代码。(用于对允许值的过滤，往往不允许的值的条件，会让代码可读性变差，也有可能写漏)
 
 ```
-func greet(person: [String: String]) {
-    guard let name = person["name"] else {
+func guard_func(obj:String?){
+    guard let name = obj else {
         return
     }
-    print("Hello \(name)")
-    guard let location = person["location"] else {
-        print("I hope the weather is nice near you.")
-        return
-    }
-    print("I hope the weather is nice in \(location).")
+    //数值合法，做处理
+    print(obj)
 }
-greet(["name": "John"])
-// 输出 "Hello John!"
-// 输出 "I hope the weather is nice near you."
-greet(["name": "Jane", "location": "Cupertino"])
-// 输出 "Hello Jane!"
-// 输出 "I hope the weather is nice in Cupertino."
+guard_func(obj: nil)
+guard_func(obj: "hey")
 ```
 
-### 检测API是否可用
+### #available
 ```
 if #available(iOS 10, macOS 10.1,*) {
-    
+    //iOS10的新特性
 }
 ```
 
 ## 函数
 ### 函数定义
 ```
-func greet(person: String, alreadyGreeted: Bool)
- -> String {
-}
-
-greet(person: "Tim", alreadyGreeted: true)
-```
-
-### 无返回值函数
-```
-func greet(person: String) {
-    print("Hello, \(person)!")
-}
-greet(person: "Dave")
-```
-
-### 多重返回值函数
-```
-func minMax(array: [Int]) -> (min: Int, max: Int) {
-    var currentMin = array[0]
-    var currentMax = array[0]
-    for value in array[1..<array.count] {
-        if value < currentMin {
-            currentMin = value
-        } else if value > currentMax {
-            currentMax = value
-        }
+func standard_func(name:String?,age:Int?) -> Bool{
+    if let _ = name,let _ = age{
+        return true
     }
-    return (currentMin, currentMax)
+    return false
 }
-
-let bounds = minMax(array: [8, -6, 2, 109, 3, 71])
-print("min is \(bounds.min) and max is \(bounds.max)")
+func void_func(name:String){
+    print("No Return Func")
+}
+func void_void_func(){
+    print("No Params No Return Func")
+}
+func multi_return_func(arr:[Int]) -> (min:Int?,max:Int?){
+    if arr.count == 0 {
+        return (nil,nil)
+    }
+    if arr.count == 1 {
+        return (arr[0],arr[1])
+    }
+    let max_value = arr.max(by: >)
+    let min_value = arr.min(by: <)
+    return (min_value,max_value)
+}
 ```
 
 ### 可选元组返回类型
@@ -615,21 +548,23 @@ someFunction(1, secondParameterName: 2)
 将不带有默认值的参数放在函数参数列表的最前。一般来说，没有默认值的参数更加的重要，将不带默认值的参数放在最前保证在函数调用时，非默认参数的顺序是一致的，同时也使得相同的函数在不同情况下调用时显得更为清晰。
 
 ```
-func someFunction(parameterWithoutDefault: Int, parameterWithDefault: Int = 12) {
-    // 如果你在调用时候不传第二个参数，parameterWithDefault 会值为 12 传入到函数体中。
+func default_vaule_func(name:String,greet:String = "Hello"){
+    print("\(greet) \(name)")
 }
+default_vaule_func(name: "张三")
+default_vaule_func(name: "李四", greet: "Hi")
 ```
 
 ### 可变参数
 ```
-func arithmeticMean(_ numbers: Double...) -> Double {
+func avg_func(_ numbers: Double...) -> Double {
     var total: Double = 0
     for number in numbers {
         total += number
     }
     return total / Double(numbers.count)
 }
-arithmeticMean(1, 2, 3, 4, 5)
+avg_func(1, 2, 3, 4, 5)
 
 注意：
 一个函数最多只能拥有一个可变参数。
@@ -684,7 +619,7 @@ reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in
 })
 ```
 ### 根据上下文推断类型
-因为排序闭包函数是作为 sorted(by:) 方法的参数传入的，Swift 可以推断其参数和返回值的类型。sorted(by:) 方法被一个字符串数组调用，因此其参数必须是 (String, String) -> Bool 类型的函数。这意味着 (String, String) 和 Bool 类型并不需要作为闭包表达式定义的一部分。因为所有的类型都可以被正确推断，返回箭头（->）和围绕在参数周围的括号也可以被省略：
+如果`sorted(by:)`方法被一个字符串数组调用，其参数就必须是`(String, String) -> Bool`类型的函数。这意味着`(String, String)`和`Bool`可以省略。返回箭头`->`和围绕在参数周围的括号也可以被省略：
 
 ```
 reversedNames = names.sorted(by: 
@@ -692,21 +627,21 @@ reversedNames = names.sorted(by:
 ```
 
 ### 单表达式闭包隐式返回
-单行表达式闭包可以通过省略 return 关键字来隐式返回单行表达式的结果。
+单行表达式闭包可以通过省略`return`关键字来隐式返回单行表达式的结果。
 
 ```
 reversedNames = names.sorted(by: { s1, s2 in s1 > s2 } )
 ```
 
 ### 参数名称缩写
-swift 自动为内联闭包提供了参数名称缩写功能，你可以直接通过 $0，$1，$2 来顺序调用闭包的参数，以此类推。
+swift 自动为内联闭包提供了参数名称缩写功能，你可以直接通过`$0`，`$1`，`$2` 来顺序调用闭包的参数，以此类推。
 
 ```
 reversedNames = names.sorted(by: { $0 > $1 } )
 ```
 
 ### 运算符方法
-实际上还有一种更简短的方式来编写上面例子中的闭包表达式。Swift 的 String 类型定义了关于大于号（>）的字符串实现，其作为一个函数接受两个 String 类型的参数并返回 Bool 类型的值。而这正好与 sorted(by:) 方法的参数需要的函数类型相符合。
+实际上还有一种更简短的方式来编写上面例子中的闭包表达式。Swift 的`String`类型定义了关于大于号`>`的字符串实现，其作为一个函数接受两个`String`类型的参数并返回`Bool`类型的值。而这正好与 `sorted(by:)`方法的参数需要的函数类型相符合。
 
 ```
 reversedNames = names.sorted(by: >)
@@ -716,101 +651,66 @@ reversedNames = names.sorted(by: >)
 果你需要将一个很长的闭包表达式作为最后一个参数传递给函数，可以使用尾随闭包来增强函数的可读性
 
 ```
-func someFunctionThatTakesAClosure(closure: () -> Void) {
-    // 函数体部分
-}
-
-// 以下是不使用尾随闭包进行函数调用
-someFunctionThatTakesAClosure(closure: {
-    // 闭包主体部分
-})
-
-// 以下是使用尾随闭包进行函数调用
-someFunctionThatTakesAClosure() {
-    // 闭包主体部分
-}
-
 reversedNames = names.sorted() { $0 > $1 }
 reversedNames = names.sorted { $0 > $1 }
 ```
 
 ### 闭包逃逸
-当一个闭包作为参数传到一个函数中，但是这个闭包在函数返回之后才被执行，我们称该闭包从函数中逃逸。当你定义接受闭包作为参数的函数时，你可以在参数名之前标注 @escaping，用来指明这个闭包是允许“逃逸”出这个函数的。
+当一个闭包作为参数传到一个函数中，但是这个闭包在函数返回之后才被执行，，你可以在参数名之前标注 @escaping，用来指明这个闭包是允许“逃逸”出这个函数的。
 
 ```
-var completionHandlers: [() -> Void] = []
-func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {
-    completionHandlers.append(completionHandler)
+var c_arr = [() -> Void]()
+func test_escape(closure:@escaping () -> Void) {
+    c_arr.append(closure)
 }
 ```
-
-someFunctionWithEscapingClosure(_:) 函数接受一个闭包作为参数，该闭包被添加到一个函数外定义的数组中。如果你不将这个参数标记为 @escaping，就会得到一个编译错误。
-
-将一个闭包标记为 @escaping 意味着你必须在闭包中显式地引用 self。
+如果你不将这个参数标记为`@escaping`，就会得到一个编译错误。  
+将一个闭包标记为`@escaping`意味着你必须在闭包中显式地引用`self`。
 
 ```
-func someFunctionWithNonescapingClosure(closure:() -> Void) {
+func test_no_escape(closure:() -> Void) {
     closure()
 }
 
 class SomeClass {
     var x = 10
     func doSomething() {
-        someFunctionWithEscapingClosure { 
+        test_escape { 
         self.x = 100 }
-        someFunctionWithNonescapingClosure { 
+        test_no_escape { 
         x = 200 }
     }
 }
 ```
 
 ### 自动闭包
-自动闭包是一种自动创建的闭包，用于包装传递给函数作为参数的表达式。这种闭包不接受任何参数，当它被调用的时候，会返回被包装在其中的表达式的值。这种便利语法让你能够省略闭包的花括号，用一个普通的表达式来代替显式的闭包。
+这种闭包不接受任何参数，当它被调用的时候，会返回被包装在其中的表达式的值。你能够省略闭包的花括号，用一个普通的表达式来代闭包。这种闭包只需要在冒号后面添加`@autoclosure`
 
 ```
-// customersInLine is ["Alex", "Ewa", "Barry", "Daniella"]
-func serve(customer customerProvider: () -> String) {
-    print("Now serving \(customerProvider())!")
-}
-serve(customer: { customersInLine.remove(at: 0) } )
-// 打印出 "Now serving Alex!"
-```
-
-下面这个版本的 serve(customer:) 完成了相同的操作，不过它并没有接受一个显式的闭包，而是通过将参数标记为 @autoclosure 来接收一个自动闭包。现在你可以将该函数当作接受 String 类型参数（而非闭包）的函数来调用。customerProvider 参数将自动转化为一个闭包，因为该参数被标记了 @autoclosure 特性。
-
-```
-// customersInLine is ["Ewa", "Barry", "Daniella"]
+var customersInLine = ["Susan","Judy","Micheal"]
 func serve(customer customerProvider: 
-@autoclosure () -> String) {
+@autoclosure () -> String) { //自动闭包
     print("Now serving \(customerProvider())!")
 }
-serve(customer: customersInLine.remove(at: 0))
-// 打印 "Now serving Ewa!"
+serve(customer: customersInLine.remove(at: 0)) //不需要写大括号
+//serve(customer: { customersInLine.remove(at: 0) } )  非自动闭包需要加大括号
 ```
 
 ```
-注意 过度使用 autoclosures 会让你的代码变得难以理解。上下文和函数名应该能够清晰地表明求值是
+注意 
+过度使用 autoclosures 会让你的代码变得难以理解。上下文和函数名应该能够清晰地表明求值是
 被延迟执行的。
 ```
 
-如果你想让一个自动闭包可以“逃逸”，则应该同时使用@autoclosure 和 @escaping 属性。
+如果你想让一个自动闭包可以“逃逸”，则应该同时使用`@autoclosure`和`@escaping`属性。
 
 ```
-// customersInLine i= ["Barry", "Daniella"]
 var customerProviders: [() -> String] = []
 func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> String) {
     customerProviders.append(customerProvider)
 }
 collectCustomerProviders(customersInLine.remove(at: 0))
 collectCustomerProviders(customersInLine.remove(at: 0))
-
-print("Collected \(customerProviders.count) closures.")
-// 打印 "Collected 2 closures."
-for customerProvider in customerProviders {
-    print("Now serving \(customerProvider())!")
-}
-// 打印 "Now serving Barry!"
-// 打印 "Now serving Daniella!"
 ```
 
 ## 枚举
@@ -825,20 +725,19 @@ enum CompassPoint {
 
 var directionToHead = CompassPoint.west
 directionToHead = .east
+let directionToHead2:CompassPoint = .north
 ```
 
 ```
 注意
-与 C 和 Objective-C 不同，Swift 的枚举成员在被创建时不会被赋予一个默认的整型值。在上面的
-CompassPoint例子中，north，south，east和west不会被隐式地赋值为0，1，2和3。相反，这些枚举
-成员本身就是完备的值，这些值的类型是已经明确定义好的CompassPoint类型。
+Swift 的枚举成员在被创建时不会被赋予一个默认的整型值。这些枚举成员本身就是完备的值，这些值的类
+型是已经明确定义好的CompassPoint类型。
 ```
-当directionToHead的类型已知时，再次为其赋值可以省略枚举类型名。在使用具有显式类型的枚举值时，这种写法让代码具有更好的可读性。
+当`directionToHead`的类型已知时，再次为其赋值可以省略枚举类型名。
 ###多个值可以出现在同一行
 ```
 enum Planet {
-    case mercury, venus, earth, mars, 
-    jupiter, saturn, uranus, neptune
+    case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune
 }
 ```
 
@@ -857,54 +756,28 @@ switch directionToHead {
 }
 // 打印 "Watch out for penguins”
 ```
-正如在控制流中介绍的那样，在判断一个枚举类型的值时，switch语句必须穷举所有情况。如果忽略了.west这种情况，上面那段代码将无法通过编译，因为它没有考虑到CompassPoint的全部成员。强制穷举确保了枚举成员不会被意外遗漏。
-
+switch语句必须穷举所有情况。如果忽略了.west这种情况，上面那段代码将无法通过编译。  
 当不需要匹配每个枚举成员的时候，你可以提供一个default分支来涵盖所有未明确处理的枚举成员：
-
-```
-let somePlanet = Planet.earth
-switch somePlanet {
-case .earth:
-    print("Mostly harmless")
-default:
-    print("Not a safe place for humans")
-}
-// 打印 "Mostly harmless”
-```
 
 ### 关联值
 ```
-enum Barcode {
-    case upc(Int, Int, Int, Int)
+enum GoodsCode {
     case qrCode(String)
+    case upc(Int,Int,Int,Int)
 }
 
-var productBarcode = Barcode.upc(8, 85909, 51226, 3)
-productBarcode = .qrCode("ABCDEFGHIJKLMNOP")
+var code:GoodsCode = .upc(8, 8, 8, 8)
+code = .qrCode("ABCDEF")
 
-switch productBarcode {
-case .upc(let numberSystem, let manufacturer, 
-let product, let check):
-    print("UPC: \(numberSystem), \(manufacturer),
-     \(product), \(check).")
-case .qrCode(let productCode):
-    print("QR code: \(productCode).")
+switch code {
+case let .upc(a,b,c,d):
+    print("\(a),\(b),\(c),\(d)")
+case .qrCode(let codeStr):
+    print(codeStr)
 }
-// 打印 "QR code: ABCDEFGHIJKLMNOP."
 ```
 
-如果一个枚举成员的所有关联值都被提取为常量，或者都被提取为变量，为了简洁，你可以只在成员名称前标注一个let或者var：
-
-```
-case let .upc(numberSystem, manufacturer, 
-product, check):
-    print("UPC: \(numberSystem),
-     \(manufacturer), \(product), \(check).")
-case let .qrCode(productCode):
-    print("QR code: \(productCode).")
-}
-// 输出 "QR code: ABCDEFGHIJKLMNOP."
-```
+如果一个枚举成员的所有关联值都被提取为常量，你可以只在成员名称前标注一个let或者var
 
 ### 原始值
 ```
@@ -928,43 +801,38 @@ enum Planet: Int {
 }
 
 let earthsOrder = Planet.earth.rawValue
-// earthsOrder 值为 3
-
-let sunsetDirection = CompassPoint.west.rawValue
-// sunsetDirection 值为 "west"
 ```
+
 在上面的例子中，Plant.mercury的显式原始值为1，Planet.venus的隐式原始值为2，依次类推。
 
-```
-enum CompassPoint: String {
-    case north, south, east, west
-}
-```
 
 ### 使用原始值初始化枚举实例
 ```
 let possiblePlanet = Planet(rawValue: 7)
 // possiblePlanet 类型为 Planet? 值为 Planet.uranus
+// 如果原始值不存在则返回nil
 ```
 
 ### 递归枚举
 递归枚举是一种枚举类型，它有一个或多个枚举成员使用该枚举类型的实例作为关联值。使用递归枚举时，编译器会插入一个间接层。你可以在枚举成员前加上indirect来表示该成员可递归。
 
 ```
-enum ArithmeticExpression {
+enum MathExp {
     case number(Int)
-    indirect case addition(ArithmeticExpression, ArithmeticExpression)
-    indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
+    indirect case add(MathExp, MathExp)
+    indirect case mul(MathExp, MathExp)
+    indirect case sub(MathExp, MathExp)
+    indirect case div(MathExp, MathExp)
 }
 ```
 
 你也可以在枚举类型开头加上`indirect`关键字来表明它的所有成员都是可递归的：
 
 ```
-indirect enum ArithmeticExpression {
+indirect enum MathExp {
     case number(Int)
-    case addition(ArithmeticExpression, ArithmeticExpression)
-    case multiplication(ArithmeticExpression, ArithmeticExpression)
+    case addition(MathExp, MathExp)
+    case multiplication(MathExp, MathExp)
 }
 ```
 例如，表达式(5 + 4) * 2，乘号右边是一个数字，左边则是另一个表达式。因为数据是嵌套的，因而用来存储数据的枚举类型也需要支持这种嵌套——这意味着枚举类型需要支持递归。
@@ -972,7 +840,7 @@ indirect enum ArithmeticExpression {
 要操作具有递归性质的数据结构，使用递归函数是一种直截了当的方式。例如，下面是一个对算术表达式求值的函数：
 
 ```
-func evaluate(_ expression: ArithmeticExpression) -> Int {
+func evaluate(_ expression: MathExp) -> Int {
     switch expression {
     case let .number(value):
         return value
