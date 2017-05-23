@@ -2,6 +2,111 @@
 
 import UIKit
 
+//MARK: 基础部分
+//十进制：
+let d_i = 17
+//二进制：
+let b_i = 0b00100
+//八进制：
+let o_i = 0o21
+//十六进制: 
+let h_i = 0x1a43
+//定义新的类型
+typealias UID = UInt16
+//布尔类型
+let b_value:Bool = true
+let temp:Int? = 5
+let temp2:Int? = nil
+//if 不能判断非bool类型，不过可以用绑定
+if temp == 3 {
+    print("hah_0")
+}
+//或者
+if let x = temp {
+    print("hah_1")
+}
+//必须每个绑定都非nil，if才能为真
+if let x = temp,let y = temp2 {
+    print("hah_2")
+}
+//函数抛出异常
+func canThrowAnError() throws{
+}
+//捕获异常
+enum DAOError: Error {
+    case noData
+    case primaryKeyNull
+}
+do {
+    //some code
+    try canThrowAnError()
+} catch DAOError.noData  {
+    
+} catch DAOError.primaryKeyNull{
+}
+//断言
+let age = 10
+assert(age >= 0)
+assert(age >= 0,"年龄不能小于0")
+
+
+
+
+
+
+//MARK: 运算符
+//swift 可以用>=和<=
+1 >= 1
+2 <= 1
+//?和!
+//可空类型
+var p_str:String? = "testStr"
+//对可空类型进行解包
+var f_str:String = p_str!
+//可空类型必须解包才能调用属性和方法
+let p_str_count = p_str?.characters.count
+p_str = nil
+//对nil用！解包会造成崩溃(运行时错误)
+//let p_str_count2 = p_str!.characters.count
+//对nil用? 解包会返回nil，但不会崩溃
+let p_str_count3 = p_str?.characters.count
+//空合运算符
+let a:String? = "hey"
+var b = "yes"
+b = a ?? b //等价于 a!=nil?a!:b
+//区间运算符
+//闭区间(包括a和b的值)
+for i in 1...5 {
+    print(i)  //打印1，2，3，4，5
+}
+//半开区间(包括a的值，不包括b的值)
+for i in 1..<5 {
+    print(i)  //打印1，2，3，4，5
+}
+
+
+
+
+
+//MARK: 元组
+//组装
+let httpError = (404,"Not Found")
+//拆解
+let (status,msg) = httpError
+//默认参数构造器
+let httpError2 = (statusCode:200,description:"OK")
+//通过参数名访问
+let statusCode = httpError2.statusCode
+//元组的比较
+//元组大小会按照从左到右、逐值比较的方式
+(1, "zebra") < (2, "apple")   // true，因为 1 小于 2
+(3, "apple") < (3, "bird")    // true，因为 3 等于 3，但是 apple 小于 bird
+(4, "dog") == (4, "dog")      // true，因为 4 等于 4，dog 等于 dog
+
+
+
+
+
 //MARK: 字符串
 //String不是NSString String是值类型
 var str = "abc"
@@ -13,6 +118,12 @@ str3.characters.count
 var str4 = "abc"
 //通过==和!=比较值
 str == str4
+//字符串插值
+let interV = 5
+var str5 = "abc \(interV)"
+
+
+
 
 
 //MARK: 数组
@@ -30,6 +141,10 @@ for (idx,value) in m_arr.enumerated(){
     print("idx:\(idx) value:\(value)")
 }
 print("\n")
+
+
+
+
 
 //MARK: 集合
 //Set不是NSSet Set是值类型
@@ -85,6 +200,10 @@ aSet.isStrictSuperset(of: aSet)
 //没有交集
 bSet.isDisjoint(with: cSet)
 
+
+
+
+
 //MARK: 字典
 //Dictionary不是NSDictionary Dictionary是值类型
 var dict = [String:Int]()
@@ -97,6 +216,11 @@ for (k,v) in dict{
     print("key:\(k) value:\(v)")
 }
 print("\n")
+
+
+
+
+
 
 // MARK: 控制流
 // 匿名for
@@ -228,6 +352,10 @@ if #available(iOS 10, macOS 10.1,*) {
     //iOS10的新特性
 }
 
+
+
+
+
 //MARK: 函数
 func standard_func(name:String?,age:Int?) -> Bool{
     if let _ = name,let _ = age{
@@ -303,6 +431,11 @@ func chooseStepFunction(backward: Bool) -> (Int) -> Int {
 chooseStepFunction(backward: true)(3)
 chooseStepFunction(backward: false)(3)
 
+
+
+
+
+
 //MARK: 闭包
 let arr:[String] = ["Susan","Helen","Jack","Mark","Judy"]
 var sorted_arr = arr.sorted (by: { (s1:String, s2:String) -> Bool in
@@ -370,6 +503,11 @@ func collectCustomerProviders(_ customerProvider: @autoclosure @escaping () -> S
 }
 collectCustomerProviders(customersInLine.remove(at: 0))
 collectCustomerProviders(customersInLine.remove(at: 0))
+
+
+
+
+
 
 //MARK: 枚举
 //枚举并不会绑定为int类型，枚举就是独一无二的类型和值,它的原始值就是它本身，除非你设定原始值
@@ -468,3 +606,35 @@ let addExp:MathExp = .add(exp,exp2)
 let mulExp:MathExp = .mul(addExp,.number(2))
 evalMathExp(mulExp)
 
+
+
+
+
+//MARK: 类与结构体
+//创建一个结构体，结构体是值类型
+struct Resolution {
+    var width = 0
+    var height = 0
+}
+struct MoblieModel {
+    var resolution = Resolution()
+}
+var mob = MoblieModel()
+//结构体可以直接改变子属性
+mob.resolution.height = 10
+//自动生成逐一成员构造器
+let res = Resolution(width: 10, height: 20)
+//创作一个类
+class VideoMode {
+    var resolution = Resolution()
+    var interlaced = false
+    var frameRate = 0.0
+    var name: String?
+}
+// 等价于 === 与 不等价于 !==
+let v1 = VideoMode()
+let v2 = VideoMode()
+let v3 = v1
+v1 === v2  //比较引用
+v1 === v3
+// == 是否相等依赖于实现
