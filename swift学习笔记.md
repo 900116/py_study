@@ -857,25 +857,25 @@ print(evaluate(product))
 
 ## 类
 ### 类和结构体对比
-共同点:<br>
+共同点:  
 
-- 定义属性用于存储值  
-- 定义方法用于提供功能  
-- 定义下标操作使得可以通过下标语法来访问实例所包含的值  
-- 定义构造器用于生成初始化值  
-- 通过扩展以增加默认实现的功能  
-- 实现协议以提供某种标准功能  
+- 定义属性  
+- 定义方法  
+- 定义下标  
+- 定义构造器
+- 定义扩展
+- 实现协议  
 
-与结构体相比，类还有如下的附加功能：
+类还有如下的附加功能：
 
-- 继承允许一个类继承另一个类的特征
-- 类型转换允许在运行时检查和解释一个类实例的类型
+- 可以继承
+- 类型转换
 - 析构器允许一个类实例释放任何其所被分配的资源
-- 引用计数允许对一个类的多次引用
+- 引用赋值
 
 ```
 注意
-结构体总是通过被复制的方式在代码中传递，不使用引用计数。
+结构体总是值传递，不存在引用计数。
 ```
 
 ### 定义语法
@@ -893,7 +893,7 @@ class VideoMode {
 ```
 
 ### 属性
-与 Objective-C 语言不同的是，Swift 允许直接设置结构体属性的子属性。上面的最后一个例子，就是直接设置了someVideoMode中resolution属性的width这个子属性，以上操作并不需要重新为整个resolution属性设置新值。
+Swift 允许直接设置结构体属性的子属性。不需要重新为整结构体设置新值。
 
 ### 结构体类型的成员逐一构造器
 ```
@@ -902,8 +902,8 @@ let vga = Resolution(width:640, height: 480)
 
 ### 结构体和枚举是值类型,类是引用类型
 ### 恒等运算符
-- 等价于（===）
-- 不等价于（!==）
+- 等价于（`===`）
+- 不等价于（`!==`）
 
 ```
 f tenEighty === alsoTenEighty {
@@ -912,13 +912,10 @@ f tenEighty === alsoTenEighty {
 //打印 "tenEighty and alsoTenEighty refer to the same Resolution instance."
 ```
 
-请注意，“等价于”（用三个等号表示，===）与“等于”（用两个等号表示，==）的不同：
+请注意，“等价于”（用三个等号表示，`===`）与“等于”（用两个等号表示，`==`）的不同：
 
-- “等价于”表示两个类类型（class type）的常量或者
-   变量引用同一个类实例。
-- “等于”表示两个实例的值“相等”或“相同”，判定时要遵
-  照设计者定义的评判标准，因此相对于“相等”来说，这是
-  一种更加合适的叫法。
+- “等价于”表示两个类对象（`class`）的地址相等。
+- “等于”表示两个变量的值 (任何类型)“相等”或“相同”，判断逻辑可由开发者决定。
 
 ### 类和结构体的选择
 何时用类：
@@ -930,18 +927,16 @@ f tenEighty === alsoTenEighty {
 
 何时用结构体：
 
-- 几何形状的大小，封装一个width属性和height属性，两者均为Double类型。
-- 一定范围内的路径，封装一个start属性和length属性，两者均为Int类型。
-- 三维坐标系内一点，封装x，y和z属性，三者均为Double类型。
+- 几何形状的大小，封装一个`width`属性和`height`属性，两者均为`Double`类型。
+- 一定范围内的路径，封装一个`start`属性和`length`属性，两者均为`Int`类型。
+- 三维坐标系内一点，封装`x`，`y`和`z`属性，三者均为`Double`类型。
 
 ### 字符串、数组、和字典类型的赋值与复制行为
-Swift 中，许多基本类型，诸如String，Array和Dictionary类型均以结构体的形式实现。这意味着被赋值给新的常量或变量，或者被传入函数或方法中时，它们的值会被拷贝。
-
-Objective-C 中NSString，NSArray和NSDictionary类型均以类的形式实现，而并非结构体。它们在被赋值或者被传入函数或方法时，不会发生值拷贝，而是传递现有实例的引用。
+Swift 中，许多基本类型，诸如`String`，`Array`和`Dictionary`类型均以结构体的形式实现。它们都是值传递。而对应的OC中的类型(`NSString`等)都是类类型，通过引用传递。
 
 ### 属性
 ### 延迟存储属性
-延迟存储属性是指当第一次被调用的时候才会计算其初始值的属性。在属性声明前使用 lazy 来标示一个延迟存储属性。
+用`lazy`可以声明一个延迟特性的存储属性，延迟属性第一次调用才会付初值。
 
 ```
 class DataManager {
@@ -951,15 +946,12 @@ class DataManager {
 }
 
 注意
-必须将延迟存储属性声明成变量（使用 var 关键字），因为属性的初始值可能在实例构造完成之后才会得
-到。而常量属性在构造过程完成之前必须要有初始值，因此无法声明成延迟属性。
-
-如果一个被标记为 lazy 的属性在没有初始化时就同时被多个线程访问，则无法保证该属性只会被初始化
-一次。
+延迟属性必须是变量(var),因为它赋值在构造之后。
+lazy属于不是线程安全的。
 ```
 
 ### 计算属性
-除存储属性外，类、结构体和枚举可以定义计算属性。计算属性不直接存储值，而是提供一个 getter 和一个可选的 setter，来间接获取和设置其他属性或变量的值。
+可以通过`getter`和`setter`为类，结构体和枚举定义计算属性。计算属性不存储值，而是通过`getter`，`setter`管理。
 
 ```
 struct Point {
@@ -983,39 +975,21 @@ struct Rect {
         }
     }
 }
-var square = Rect(origin: Point(x: 0.0, y: 0.0),
-    size: Size(width: 10.0, height: 10.0))
-let initialSquareCenter = square.center
-square.center = Point(x: 15.0, y: 15.0)
-print("square.origin is now at (\(square.origin.x), \(square.origin.y))")
-// 打印 "square.origin is now at (10.0, 10.0)”
 ```
 
 ### 简化Setter
-如果计算属性的 setter 没有定义表示新值的参数名，则可以使用默认名称 newValue
+`setter`可以省略参数，使用默认名称 `newValue`s
 
 ```
-struct AlternativeRect {
-    var origin = Point()
-    var size = Size()
-    var center: Point {
-        get {
-            let centerX = origin.x + (size.width / 2)
-            let centerY = origin.y + (size.height / 2)
-            return Point(x: centerX, y: centerY)
-        }
-        set {
-            origin.x = newValue.x - (size.width / 2)
-            origin.y = newValue.y - (size.height / 2)
-        }
-    }
+set {
+    origin.x = newValue.x - (size.width / 2)
+    origin.y = newValue.y - (size.height / 2)
 }
 ```
 
 ### 只读计算属性
-只有 getter 没有 setter 的计算属性就是只读计算属性。只读计算属性总是返回一个值，可以通过点运算符访问，但不能设置新的值。
-
-只读计算属性的声明可以去掉 get 关键字和花括号：
+只读计算属性，只有`getter`。它可以通过点运算符访问，但不能设置新的值。  
+只读计算属性的声明可以去掉 `get` 关键字和花括号：
 
 ```
 struct Cuboid {
@@ -1030,14 +1004,12 @@ print("the volume of fourByFiveByTwo is \(fourByFiveByTwo.volume)")
 ```
 
 ### 属性观察器
-- willSet 在新的值被设置之前调用
-- didSet 在新的值被设置之后立即调用
+- `willSet` 在新的值被设置之前调用
+- `didSet` 在新的值被设置之后立即调用
 
 ```
 注意
-父类的属性在子类的构造器中被赋值时，它在父类中的 willSet 和 didSet 观察器会被调用，随后才会
-调用子类的观察器。在父类初始化方法调用之前，子类给属性赋值时，观察器不会被调用。 有关构造器代
-理的更多信息，请参考值类型的构造器代理和类的构造器代理规则。
+父类的属性在子类的构造器中被赋值时，先调用父类观察器，后调用子类的观察器。在父类初始化方法调用之前(属性被赋值)，观察器不会被调用。
 ```
 
 ```
@@ -1053,16 +1025,6 @@ class StepCounter {
         }
     }
 }
-let stepCounter = StepCounter()
-stepCounter.totalSteps = 200
-// About to set totalSteps to 200
-// Added 200 steps
-stepCounter.totalSteps = 360
-// About to set totalSteps to 360
-// Added 160 steps
-stepCounter.totalSteps = 896
-// About to set totalSteps to 896
-// Added 536 steps
 ```
 
 ```
@@ -1073,33 +1035,28 @@ stepCounter.totalSteps = 896
 ```
 
 ### 全局变量和局部变量
-计算属性和属性观察器所描述的功能也可以用于全局变量和局部变量。全局变量是在函数、方法、闭包或任何类型之外定义的变量。局部变量是在函数、方法或闭包内部定义的变量。
+全局变量和局部变量，都可以添加属性观察器。
 
 ```
 注意
-全局的常量或变量都是延迟计算的，跟延迟存储属性相似，不同的地方在于，全局的常量或变量不需要标记
-lazy修饰符。
+全局的常量或变量都是延迟计算的，不需要标记lazy修饰符。
 局部范围的常量或变量从不延迟计算。
 ```
 
-### 类型属性
-实例属性属于一个特定类型的实例，每创建一个实例，实例都拥有属于自己的一套属性值，实例之间的属性相互独立。
-
-也可以为类型本身定义属性，无论创建了多少个该类型的实例，这些属性都只有唯一一份。这种属性就是类型属性。
-
-类型属性用于定义某个类型所有实例共享的数据，比如所有实例都能用的一个常量（就像 C 语言中的静态常量），或者所有实例都能访问的一个变量（就像 C 语言中的静态变量）。
-
-存储型类型属性可以是变量或常量，计算型类型属性跟实例的计算型属性一样只能定义成变量属性
+### 类属性
+类属性，不论有多少个实例，属性都只有一份。  
+它用于定义某个类型共享的数据。  
+存储类属性可以是变量或常量，计算类属性只能定义成变量属性
 
 ```
 注意
-跟实例的存储型属性不同，必须给存储型类型属性指定默认值，因为类型本身没有构造器，也就无法在初始
-化过程中使用构造器给类型属性赋值。
-存储型类型属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化。即使它们被多个线程同时
-访问，系统也保证只会对其进行一次初始化，并且不需要对其使用 lazy 修饰符。
+类属性必须给存储型类型属性指定默认值，因为类型本身没有构造器，所以无法使用构造器。
+存储型类属性是延迟初始化的，它们只有在第一次被访问的时候才会被初始化，并且不需要对其使用 lazy 修饰符。
 ```
 
 ### 类型属性语法
+类属性支持`struct` `enum` `class`
+
 ```
 struct SomeStructure {
     static var storedTypeProperty = "Some value."
@@ -1107,31 +1064,6 @@ struct SomeStructure {
         return 1
     }
 }
-enum SomeEnumeration {
-    static var storedTypeProperty = "Some value."
-    static var computedTypeProperty: Int {
-        return 6
-    }
-}
-class SomeClass {
-    static var storedTypeProperty = "Some value."
-    static var computedTypeProperty: Int {
-        return 27
-    }
-    class var overrideableComputedTypeProperty: Int {
-        return 107
-    }
-}
-
-print(SomeStructure.storedTypeProperty)
-// 打印 "Some value."
-SomeStructure.storedTypeProperty = "Another value."
-print(SomeStructure.storedTypeProperty)
-// 打印 "Another value.”
-print(SomeEnumeration.computedTypeProperty)
-// 打印 "6"
-print(SomeClass.computedTypeProperty)
-// 打印 "27"
 ```
 
 ```
@@ -1160,15 +1092,12 @@ struct AudioChannel {
 
 ```
 注意
-在第一个检查过程中，didSet 属性观察器将 currentLevel 设置成了不同的值，但这不会造成属性观
-察器被再次调用。
+didSet中改变属性，不会造成死循环。
 ```
 
 ## 方法
 ### 在实例方法中修改值类型
-结构体和枚举是值类型。默认情况下，值类型的属性不能在它的实例方法中被修改。
-
-但是，如果你确实需要在某个特定的方法中修改结构体或者枚举的属性，你可以为这个方法选择可变(mutating)行为，然后就可以从其方法内部改变它的属性；并且这个方法做的任何改变都会在方法执行结束时写回到原始结构中。方法还可以给它隐含的self属性赋予一个全新的实例，这个新实例在方法结束时会替换现存实例。
+结构体和枚举要想在方法中改变属性必须用`mutating`修饰（默认是不能改的，因为是值类型），在方法中甚至，可以改变self的值。
 
 ```
 struct Point {
@@ -1176,49 +1105,17 @@ struct Point {
     mutating func moveByX(deltaX: Double, y deltaY: Double) {
         x += deltaX
         y += deltaY
+        //self = Point(x: x + deltaX, y: y + deltaY)
     }
 }
-var somePoint = Point(x: 1.0, y: 1.0)
-somePoint.moveByX(2.0, y: 3.0)
-print("The point is now at (\(somePoint.x), \(somePoint.y))")
-// 打印 "The point is now at (3.0, 4.0)"
-
-struct Point {
-    var x = 0.0, y = 0.0
-    mutating func moveBy(x deltaX: Double, y deltaY: Double) {
-        self = Point(x: x + deltaX, y: y + deltaY)
-    }
-}
-
-
-enum TriStateSwitch {
-    case Off, Low, High
-    mutating func next() {
-        switch self {
-        case .Off:
-            self = .Low
-        case .Low:
-            self = .High
-        case .High:
-            self = .Off
-        }
-    }
-}
-var ovenLight = TriStateSwitch.Low
-ovenLight.next()
-// ovenLight 现在等于 .High
-ovenLight.next()
-// ovenLight 现在等于 .Off
 ```
 
 ### 类方法
-实例方法是被某个类型的实例调用的方法。你也可以定义在类型本身上调用的方法，这种方法就叫做类型方法。在方法的func关键字之前加上关键字static，来指定类型方法。类还可以用关键字class来允许子类重写父类的方法实现。
+通过`static`可以定义一个类方法。类还可以用关键字`class`来允许子类重写父类的方法实现。
 
 ```
 注意
-在 Objective-C 中，你只能为 Objective-C 的类类型（classes）定义类型方法（type-level
-methods）。在 Swift 中，你可以为所有的类、结构体和枚举定义类型方法。每一个类型方法都被它所
-支持的类型显式包含。
+类、结构体、枚举都可以定义’类方法‘。
 ```
 
 ```
@@ -1232,7 +1129,7 @@ SomeClass.someTypeMethod()
 
 ## 下标
 ### 定义下标属性
-与定义实例方法类似，定义下标使用subscript关键字，指定一个或多个输入参数和返回类型；与实例方法不同的是，下标可以设定为读写或只读。
+可以用`subscript`关键字来定义下标方法，下标还可以设定读写权限。
 
 ```
 subscript(index: Int) -> Int {
@@ -1247,9 +1144,10 @@ subscript(index: Int) -> Int {
 ```
 
 ### 下标选项
-下标可以接受任意数量的入参，并且这些入参可以是任意类型。下标的返回值也可以是任意类型。下标可以使用变量参数和可变参数，但不能使用输入输出参数，也不能给参数设置默认值。
-一个类或结构体可以根据自身需要提供多个下标实现，使用下标时将通过入参的数量和类型进行区分，自动匹配合适的下标，这就是下标的重载。  
-重写indexIsValidForRow方法可以判断下标是否合法。
+下标可以接受任意数量的入参，并且这些入参可以是任意类型，下标的返回值也可以是任意类型。  
+下标可以使用变量参数和可变参数，但不能使用输入输出参数，也不能给参数设置默认值。  
+类或结构体可以提供多个下标实现并且支持重载。   
+重写`indexIsValidForRow`方法可以判断下标是否合法。  
 
 ```
 struct Matrix {
@@ -1285,23 +1183,24 @@ class Bicycle: Vehicle {
 ```
 
 ### 重写
-子类可以为继承来的实例方法，类方法，实例属性，或下标提供自己定制的实现。我们把这种行为叫重写。
+可以重写继承来的实例方法，类方法，实例属性，或下标提供自己定制的实现。
 
-如果要重写某个特性，你需要在重写定义的前面加上override关键字。这么做，你就表明了你是想提供一个重写版本，而非错误地提供了一个相同的定义。意外的重写行为可能会导致不可预知的错误，任何缺少override关键字的重写都会在编译时被诊断为错误。
+如果要重写，需要加上`override`关键字。  
+任何缺少`override`关键字的重写都会在编译时被诊断为错误。
 
 ### super
-在合适的地方，你可以通过使用super前缀来访问超类版本的方法，属性或下标：
+在合适的地方，你可以通过使用`super`前缀来调用父类的方法，属性或下标：
 
-- 在方法someMethod()的重写实现中，可以通过super.someMethod()来调用超类版本的someMethod()方法。
-- 在属性someProperty的 getter 或 setter 的重写实现中，可以通过super.someProperty来访问超类版本的someProperty属性。
-- 在下标的重写实现中，可以通过super[someIndex]来访问超类版本中的相同下标。
+- `super.someMethod()`调用父类方法
+- `super.someProperty`调用父类属性
+- `super[someIndex]`调用父类的下标方法
 
 ### 重写属性
-你可以重写继承来的实例属性或类型属性，提供自己定制的 getter 和 setter，或添加属性观察器使重写的属性可以观察属性值什么时候发生改变。
+你可以重写继承来的实例属性或类属性，提供自己定制的`getter`和`setter`,`willSet`,`didSet`。
 
-你在重写一个属性时，必需将它的名字和类型都写出来。这样才能使编译器去检查你重写的属性是与超类中同名同类型的属性相匹配的。
+重写一个属性时，必需将它的名字和类型都写出来。
 
-你可以将一个继承来的只读属性重写为一个读写属性，只需要在重写版本的属性里提供 getter 和 setter 即可。但是，你不可以将一个继承来的读写属性重写为一个只读属性。
+你可以将一个继承来的只读属性重写为一个读写属性。但是，你不可以将一个继承来的读写属性重写为一个只读属性。
 
 ```
 class Car: Vehicle {
@@ -1324,9 +1223,8 @@ class Car: Vehicle {
 ```
 注意
 你不可以为继承来的常量存储型属性或继承来的只读计算型属性添加属性观察器。这些属性的值是不可以被设
-置的，所以，为它们提供willSet或didSet实现是不恰当。
-此外还要注意，你不可以同时提供重写的 setter 和重写的属性观察器。如果你想观察属性值的变化，并且
-你已经为那个属性提供了定制的 setter，那么你在 setter 中就可以观察到任何值变化了。
+置的，所以，为它们提供willSet或didSet实现是不恰当。  
+你不可以同时提供重写的 setter 和重写的属性观察器。你可以在setter中实现属性观察的效果。
 ```
 
 ```
@@ -1340,11 +1238,11 @@ class AutomaticCar: Car {
 ```
 
 ### 防止重写
-你可以通过把方法，属性或下标标记为final来防止它们被重写，只需要在声明关键字前加上final修饰符即可（例如：final var，final func，final class func，以及final subscript）。
+通过`final`关键字防止方法，属性或下标被重写（例如：`final var`，`final func`，`final class func`，以及`final subscript`）。
 
-如果你重写了带有final标记的方法，属性或下标，在编译时会报错。
+重写`final`属性或下标，在编译时会报错。
 
-你可以通过在关键字class前添加final修饰符（final class）来将整个类标记为 final 的。这样的类是不可被继承的，试图继承这样的类会导致编译报错。
+通过`final`在关键字防止类被继承，试图继承这样的类会导致编译报错。
 
 
 ## 构造过程
@@ -1355,7 +1253,8 @@ class AutomaticCar: Car {
 
 ```
 注意
-当你为存储型属性设置默认值或者在构造器中为其赋值时，它们的值是被直接设置的，不会触发任何属性观察者。
+当你为存储型属性设置默认值或者在构造器中为其赋值时，它们的值是被直接设置的，不会触发任何属性观察
+者。
 ```
 
 ### 构造器
@@ -1386,12 +1285,12 @@ struct Color {
 注意，如果不通过外部参数名字传值，你是没法调用这个构造器的。只要构造器定义了某个外部参数名，你就必须使用它，忽略它将导致编译错误：
 
 ```
-let veryGreen = Color(0.0, 1.0, 0.0)
 // 报编译时错误，需要外部名称
+let veryGreen = Color(0.0, 1.0, 0.0)
 ```
 
 ### 不带外部名的构造器参数
-如果你不希望为构造器的某个参数提供外部名字，你可以使用下划线(_)来显式描述它的外部名，以此重写上面所说的默认行为。
+你可以使用下划线(_)来省略参数的外部名，以此重写上面所说的默认行为。
 
 ```
 struct Celsius {
@@ -1419,7 +1318,7 @@ let bodyTemperature = Celsius(37.0)
 ```
 
 ### 默认构造器
-如果结构体或类的所有属性都有默认值，同时没有自定义的构造器，那么 Swift 会给这些结构体或类提供一个默认构造器（default initializers）。这个默认构造器将简单地创建一个所有属性值都设置为默认值的实例。
+如果结构体或类的所有属性都有默认值，同时没有自定义的构造器，那么 Swift 会给这些结构体或类提供一个默认构造器（`default initializers`）。这个默认构造器将简单地创建一个所有属性值都设置为默认值的实例。
 
 ```
 class ShoppingListItem {
