@@ -233,8 +233,4 @@ def test29():
 def test30():
 	number = 12321
 	x = str(number)
-	flag = True
-	for i in xrange(len(x)/2):
-		if x[i] != x[-i-1]:
-			flag = False
-	print flag
+    print x == x[::-1]
