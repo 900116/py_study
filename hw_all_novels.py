@@ -60,7 +60,9 @@ def find_all_novels(url,host,title,parentPath):
 		find_all_novels(nexturl, host, nexttitle, parentPath)
 
 if __name__ == "__main__":
-	savePath = os.path.expanduser("~/Desktop/ht/")
+    savePath = "ht"
+    if not os.path.exists(savePath):
+        os.mkdir(savePath)
 	host = "http://www.yiren22.com"
 	model_url = "/se/yazhousetu/564305.html"
 	firstpage = host+model_url
